@@ -16,6 +16,7 @@ public class Menu
     private GL2 m_GL2;
     private GLUT m_Glut;
     
+    
     public Menu(GL2 _openGL2)
     {
         m_GL2 = _openGL2;
@@ -98,5 +99,241 @@ public class Menu
             default:
                 m_Glut.glutBitmapString(GLUT.BITMAP_8_BY_13, _text);
         }
+    }
+    
+    public void CreateLogo()
+    {
+        DrawT();
+        DrawE();
+        DrawI();
+        DrawR();
+        DrawS();
+    }
+    
+    private void DrawT()
+    {
+        int posX = -60;
+        int posY = 50;
+        
+        for(int i = 0; i < 3; i++)
+        {
+             m_GL2.glPushMatrix();
+             m_GL2.glTranslatef(posX, posY, 0);
+             m_GL2.glColor3f(1, 0, 0);
+             m_Glut.glutSolidCube(5);
+             m_GL2.glPopMatrix();
+             posX += 5;
+        }
+        
+        posX = -55;
+        posY = 45;
+        
+        for(int i = 0; i < 4; i++)
+        {
+             m_GL2.glPushMatrix();
+             m_GL2.glTranslatef(posX, posY, 0);
+             m_GL2.glColor3f(1, 0, 0);
+             m_Glut.glutSolidCube(5);
+             m_GL2.glPopMatrix();
+             posY -= 5;
+        }
+        
+        posX = -25;
+        posY = 50;
+        
+        for(int i = 0; i < 3; i++)
+        {
+             m_GL2.glPushMatrix();
+             m_GL2.glTranslatef(posX, posY, 0);
+             m_GL2.glColor3f(1, 0, 0);
+             m_Glut.glutSolidCube(5);
+             m_GL2.glPopMatrix();
+             posX += 5;
+        }
+        
+        posX = -20;
+        posY = 45;
+        
+        for(int i = 0; i < 4; i++)
+        {
+             m_GL2.glPushMatrix();
+             m_GL2.glTranslatef(posX, posY, 0);
+             m_GL2.glColor3f(1, 0, 0);
+             m_Glut.glutSolidCube(5);
+             m_GL2.glPopMatrix();
+             posY -= 5;
+        }
+    }
+    
+    private void DrawI()
+    {
+        int posX = 15;
+        int posY = 50;
+        
+        for(int i = 0; i < 5; i++)
+        {
+             m_GL2.glPushMatrix();
+             m_GL2.glTranslatef(posX, posY, 0);
+             m_GL2.glColor3f(0, 0, 1);
+             m_Glut.glutSolidCube(5);
+             m_GL2.glPopMatrix();
+             posY -= 5;
+        }
+    }
+    
+    private void DrawS()
+    {
+        int posX = 30;
+        int posY = 50;
+        
+        for(int z = 0; z < 3; z++)
+        {
+            for(int i = 0; i < 2; i++)
+            {
+                 m_GL2.glPushMatrix();
+                 m_GL2.glTranslatef(posX, posY, 0);
+                 m_GL2.glColor3f(0, 1, 1);
+                 m_Glut.glutSolidCube(5);
+                 m_GL2.glPopMatrix();
+                 posX -= 5;
+            }
+            
+            posX = 30;
+            posY -= 10;
+        }
+        
+        posX = 25;
+        posY = 50;
+        
+        for(int z= 0; z < 2; z++)
+        {
+            for(int i = 0; i < 3; i++)
+            {
+                 m_GL2.glPushMatrix();
+                 m_GL2.glTranslatef(posX, posY, 0);
+                 m_GL2.glColor3f(0, 1, 1);
+                 m_Glut.glutSolidCube(5);
+                 m_GL2.glPopMatrix();
+                 posY -= 5;
+            }
+            
+            posX = 30;
+            posY = 40;
+        }
+    }
+    
+    private void DrawE()
+    {
+        int posX = -40;
+        int posY = 50;
+        
+        for(int i = 0; i < 5; i++)
+        {
+             m_GL2.glPushMatrix();
+             m_GL2.glTranslatef(posX, posY, 0);
+             m_GL2.glColor3f(0, 1, 0);
+             m_Glut.glutSolidCube(5);
+             m_GL2.glPopMatrix();
+             posY -= 5;
+        }
+        
+        posX = -35;
+        posY = 50;
+        
+        for(int z = 0; z < 3; z++)
+        {
+            for(int i = 0; i < 2; i++)
+            {
+                 m_GL2.glPushMatrix();
+                 m_GL2.glTranslatef(posX, posY, 0);
+                 m_GL2.glColor3f(0, 1, 0);
+                 m_Glut.glutSolidCube(5);
+                 m_GL2.glPopMatrix();
+                 posX -= 5;
+            }
+            
+            posX = -35;
+            posY -= 10;
+        }
+    }
+    
+    private void DrawR()
+    {
+        int posX = -5;
+        int posY = 50;
+        
+        for(int i = 0; i < 5; i++)
+        {
+             m_GL2.glPushMatrix();
+             m_GL2.glTranslatef(posX, posY, 0);
+             m_GL2.glColor3f(1, 1, 0);
+             m_Glut.glutSolidCube(5);
+             m_GL2.glPopMatrix();
+             posY -= 5;
+        }
+        
+        posX = 0;
+        posY = 50;
+        
+        for(int z = 0; z < 2; z++)
+        {
+            for(int i = 0; i < 1; i++)
+            {
+                 m_GL2.glPushMatrix();
+                 m_GL2.glTranslatef(posX, posY, 0);
+                 m_GL2.glColor3f(1, 1, 0);
+                 m_Glut.glutSolidCube(5);
+                 m_GL2.glPopMatrix();
+                 posX += 5;
+            }
+            
+            posX = 0;
+            posY -= 10;
+        }
+        
+        posX = 5;
+        posY = 50;
+        
+        for(int i = 0; i < 3; i++)
+        {
+             m_GL2.glPushMatrix();
+             m_GL2.glTranslatef(posX, posY, 0);
+             m_GL2.glColor3f(1, 1, 0);
+             m_Glut.glutSolidCube(5);
+             m_GL2.glPopMatrix();
+             posY -= 5;
+        }
+        
+        posX = 0;
+        posY = 35;
+        
+        for(int i = 0; i < 2; i++)
+        {
+             m_GL2.glPushMatrix();
+             m_GL2.glTranslatef(posX, posY, 0);
+             m_GL2.glColor3f(1, 1, 0);
+             m_Glut.glutSolidCube(5);
+             m_GL2.glPopMatrix();
+             posY -= 5;
+             posX += 5;
+        }
+    }
+    
+    public void SelectPoint(int _pos)
+    {
+        switch(_pos)
+        {
+            case 1:
+                m_GL2.glTranslatef(-10, -50, 0);
+                break;
+            case 2:
+                m_GL2.glTranslatef(-10, -60, 0);
+                break;
+            case 3:
+                m_GL2.glTranslatef(-10, -70, 0);
+                break;
+        }
+        m_GL2.glColor3f(1, 1, 1);
+        m_Glut.glutSolidCube(2);
     }
 }

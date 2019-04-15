@@ -17,6 +17,7 @@ public class Game implements GLEventListener, KeyListener
     private GL2 m_GL2;
     private GLUT m_GLUT;
     private Menu m_Menu;
+    private int m_Selection;
     
     @Override
     public void init(GLAutoDrawable _drawable) 
@@ -26,6 +27,7 @@ public class Game implements GLEventListener, KeyListener
         m_GLUT = new GLUT();
         m_Menu = new Menu(m_GL2);
         m_Ingame = false;
+        m_Selection = 1;
     }
 
     @Override
@@ -58,7 +60,15 @@ public class Game implements GLEventListener, KeyListener
     
     public void MenuScreen()
     {
-        m_Menu.CreateText(0, 95, "HIGH SCORE", Color.white, 7);
+        m_Menu.CreateLogo();
+                m_Menu.CreateText(-80, 95, ""+m_Selection, Color.white, 7);
+
+        m_Menu.CreateText(-5, 95, "HIGH SCORE", Color.white, 7);
+        m_Menu.CreateText(-5, 90, "0000000000", Color.white, 1);
+        m_Menu.CreateText(-5, -50, "Start Game", Color.white, 8);
+        m_Menu.CreateText(-5, -60, "How to Play", Color.white, 8);
+        m_Menu.CreateText(-5, -70, "Exit", Color.white, 8);
+        m_Menu.SelectPoint(m_Selection);
     }
     
     public void GameScreen()
@@ -83,6 +93,28 @@ public class Game implements GLEventListener, KeyListener
         {
             case KeyEvent.VK_ESCAPE:
                 System.exit(0);
+                break;
+            case KeyEvent.VK_UP:
+                if(m_Selection < 3)
+                    m_Selection++;
+                break;
+            case KeyEvent.VK_DOWN:
+                if(m_Selection > 1)
+                    m_Selection--;
+                break;
+            case KeyEvent.VK_ENTER:
+                if(!m_Ingame)
+                {
+                    switch(m_Selection)
+                    {
+                        case 1:
+                            m_Ingame = true;
+                            break;
+                        case 3:
+                            System.exit(0);
+                            break;
+                    }
+                }
                 break;
         }
     }
