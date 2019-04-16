@@ -15,12 +15,13 @@ public class Menu
 {
     private GL2 m_GL2;
     private GLUT m_Glut;
-    
+    private float m_Speed;
     
     public Menu(GL2 _openGL2)
     {
         m_GL2 = _openGL2;
         m_Glut = new GLUT();
+        m_Speed = 0f;
     }
     
     public void CreateText(int _x, int _y, String _text)
@@ -103,30 +104,21 @@ public class Menu
     
     public void CreateLogo()
     {
-                    m_GL2.glPushMatrix();
-            m_GL2.glTranslatef(-90, -90, 0);
-            m_GL2.glColor3f(1, 0, 0);
-            m_Glut.glutSolidCube(5);
-            m_GL2.glPopMatrix();
-            
-            m_GL2.glPushMatrix();
-            m_GL2.glTranslatef(-95, -90, 0);
-            m_GL2.glColor3f(1, 0, 0);
-            m_Glut.glutSolidCube(5);
-            m_GL2.glPopMatrix();
-        /*
         DrawT();
         DrawE();
         DrawI();
         DrawR();
         DrawS();
-        DrawCube();*/
+        DrawCube();
     }
     
     private void DrawCube()
     {
+        m_Speed -= 1;
+        
         m_GL2.glPushMatrix();
         m_GL2.glTranslatef(50, 40, 0);
+        m_GL2.glRotatef(m_Speed, 0, 0, 1);
         m_GL2.glColor3f(1, 0.5f, 1);
         m_Glut.glutSolidCube(25);
         m_GL2.glPopMatrix();
@@ -137,10 +129,12 @@ public class Menu
         int posX = -60;
         int posY = 50;
         
+        
         for(int i = 0; i < 3; i++)
         {
              m_GL2.glPushMatrix();
              m_GL2.glTranslatef(posX, posY, 0);
+             m_GL2.glRotatef(m_Speed, 0, 1, 0);
              m_GL2.glColor3f(1, 0, 0);
              m_Glut.glutSolidCube(5);
              m_GL2.glPopMatrix();
@@ -154,6 +148,7 @@ public class Menu
         {
              m_GL2.glPushMatrix();
              m_GL2.glTranslatef(posX, posY, 0);
+             m_GL2.glRotatef(m_Speed, 0, 1, 0);
              m_GL2.glColor3f(1, 0, 0);
              m_Glut.glutSolidCube(5);
              m_GL2.glPopMatrix();
@@ -167,6 +162,7 @@ public class Menu
         {
              m_GL2.glPushMatrix();
              m_GL2.glTranslatef(posX, posY, 0);
+             m_GL2.glRotatef(m_Speed, 0, 1, 0);
              m_GL2.glColor3f(1, 0, 0);
              m_Glut.glutSolidCube(5);
              m_GL2.glPopMatrix();
@@ -180,6 +176,7 @@ public class Menu
         {
              m_GL2.glPushMatrix();
              m_GL2.glTranslatef(posX, posY, 0);
+             m_GL2.glRotatef(m_Speed, 0, 1, 0);
              m_GL2.glColor3f(1, 0, 0);
              m_Glut.glutSolidCube(5);
              m_GL2.glPopMatrix();
@@ -196,6 +193,7 @@ public class Menu
         {
              m_GL2.glPushMatrix();
              m_GL2.glTranslatef(posX, posY, 0);
+             m_GL2.glRotatef(m_Speed, 0, 1, 0);
              m_GL2.glColor3f(0, 0, 1);
              m_Glut.glutSolidCube(5);
              m_GL2.glPopMatrix();

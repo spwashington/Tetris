@@ -14,6 +14,7 @@ import java.awt.Color;
 public class Game implements GLEventListener, KeyListener
 {
     private boolean m_Ingame;
+    private boolean m_HowToPlay;
     private GL2 m_GL2;
     private GLUT m_GLUT;
     private Menu m_Menu;
@@ -29,6 +30,7 @@ public class Game implements GLEventListener, KeyListener
         m_Menu = new Menu(m_GL2);
         m_Game = new Ingame(m_GL2);
         m_Ingame = false;
+        m_HowToPlay = false;
         m_Selection = 1;
     }
 
@@ -46,14 +48,18 @@ public class Game implements GLEventListener, KeyListener
         m_GL2.glClearColor(0, 0, 0, 1);        
         m_GL2.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);       
         m_GL2.glLoadIdentity();
-        
+
         
         //Game Logic
-        if(!m_Ingame)
-            MenuScreen();
+        if(!m_HowToPlay)
+        {
+            if(!m_Ingame)
+                MenuScreen();
+            else
+                GameScreen();
+        }
         else
-            GameScreen();
-        
+            HowToPlay();
         
         //End Game
         
@@ -63,7 +69,7 @@ public class Game implements GLEventListener, KeyListener
     public void MenuScreen()
     {
         m_Menu.CreateLogo();
-        m_Menu.CreateText(-5, 95, "HIGH SCORE", Color.white, 7);
+        m_Menu.CreateText(-5, 95, "HIGH SCORE", Color.white, 8);
         m_Menu.CreateText(-5, 90, Integer.toString(m_Game.GetHighScore()), Color.white, 1);
         m_Menu.CreateText(-5, -50, "Start Game", Color.white, 8);
         m_Menu.CreateText(-5, -60, "How to Play", Color.white, 8);
@@ -73,7 +79,20 @@ public class Game implements GLEventListener, KeyListener
     
     public void GameScreen()
     {
-        
+        m_Game.Execute();
+    }
+    
+    public void HowToPlay()
+    {
+        m_Selection = 2;
+        m_Menu.CreateLogo();
+        m_Menu.CreateText(-10, -20, "HOW TO PLAY", Color.yellow, 8);
+        m_Menu.CreateText(-20, -30, "1. Use arrows left and right to move a piece", Color.white, 7);
+        m_Menu.CreateText(-20, -35, "2. Complete a line with piece to give 100 points", Color.white, 7);
+        m_Menu.CreateText(-20, -40, "3. After complete a line with pieces, this line will be removed", Color.white, 7);
+        m_Menu.CreateText(-20, -45, "4. If you place a piece in the out top, you lose", Color.white, 7);
+        m_Menu.CreateText(-5, -60, "Back", Color.white, 8);
+        m_Menu.SelectPoint(m_Selection);
     }
 
     @Override
@@ -109,6 +128,9 @@ public class Game implements GLEventListener, KeyListener
                     {
                         case 1:
                             m_Ingame = true;
+                            break;
+                        case 2:
+                            m_HowToPlay = !m_HowToPlay;
                             break;
                         case 3:
                             System.exit(0);
