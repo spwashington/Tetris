@@ -103,11 +103,33 @@ public class Menu
     
     public void CreateLogo()
     {
+                    m_GL2.glPushMatrix();
+            m_GL2.glTranslatef(-90, -90, 0);
+            m_GL2.glColor3f(1, 0, 0);
+            m_Glut.glutSolidCube(5);
+            m_GL2.glPopMatrix();
+            
+            m_GL2.glPushMatrix();
+            m_GL2.glTranslatef(-95, -90, 0);
+            m_GL2.glColor3f(1, 0, 0);
+            m_Glut.glutSolidCube(5);
+            m_GL2.glPopMatrix();
+        /*
         DrawT();
         DrawE();
         DrawI();
         DrawR();
         DrawS();
+        DrawCube();*/
+    }
+    
+    private void DrawCube()
+    {
+        m_GL2.glPushMatrix();
+        m_GL2.glTranslatef(50, 40, 0);
+        m_GL2.glColor3f(1, 0.5f, 1);
+        m_Glut.glutSolidCube(25);
+        m_GL2.glPopMatrix();
     }
     
     private void DrawT()
@@ -324,13 +346,13 @@ public class Menu
         switch(_pos)
         {
             case 1:
-                m_GL2.glTranslatef(-10, -50, 0);
+                m_GL2.glTranslatef(-8, -48, 0);
                 break;
             case 2:
-                m_GL2.glTranslatef(-10, -60, 0);
+                m_GL2.glTranslatef(-8, -58, 0);
                 break;
             case 3:
-                m_GL2.glTranslatef(-10, -70, 0);
+                m_GL2.glTranslatef(-8, -68, 0);
                 break;
         }
         m_GL2.glColor3f(1, 1, 1);
