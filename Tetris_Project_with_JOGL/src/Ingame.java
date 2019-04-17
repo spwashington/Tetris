@@ -19,6 +19,8 @@ public class Ingame
     private int m_Points;
     private int m_HighScore;
     private int m_Grid [][];
+    private int m_MatrixPosX;
+    private int m_MatrixPosY;
     private int m_PosX;
     private int m_PosY;
     private String m_NextPiece;
@@ -32,8 +34,10 @@ public class Ingame
         m_Points = 0;
         m_HighScore = 0;
         m_PosX = -20;
-        m_PosY = 45;
+        m_PosY = 50; //Lugar a cima, o valido é 45
         m_Grid = new int[10][20];
+        m_MatrixPosX = 0;
+        m_MatrixPosY = 0;
         m_NextPiece = NextPiece();
         m_Piece = new Piece(_openGL2, m_NextPiece);
         m_UpdateTimer = 0;
@@ -41,27 +45,78 @@ public class Ingame
         CreateBoard();
     }
     
+    public void CreateScene()
+    {
+        m_GL2.glLineWidth(10.0f);
+        m_GL2.glBegin(GL2.GL_LINES);
+        m_GL2.glColor3f(1,0,0); 
+        
+        m_GL2.glVertex2f(-23.5f, 45f);
+        m_GL2.glVertex2f(-23.5f, -55f);
+        
+        m_GL2.glVertex2f(28.5f, 45f);
+        m_GL2.glVertex2f(28.5f, -55f);
+        
+        m_GL2.glVertex2f(-23.5f, -55f);
+        m_GL2.glVertex2f(28.5f, -55f);
+        m_GL2.glEnd();
+        
+        m_GL2.glLineWidth(1.0f);
+        m_GL2.glBegin(GL2.GL_LINES);
+        m_GL2.glColor3f(1,0,1); 
+        m_GL2.glVertex2f(-23.5f, 45f);
+        m_GL2.glVertex2f(28.5f, 45f);
+        
+        m_GL2.glColor3f(0,0,1); 
+        m_GL2.glVertex2f(35f, 30f);
+        m_GL2.glVertex2f(35f, 0f);
+        
+        m_GL2.glVertex2f(35f, 30f);
+        m_GL2.glVertex2f(55f, 30f);
+        
+        m_GL2.glVertex2f(55f, 30f);
+        m_GL2.glVertex2f(55f, 0f);
+        
+        m_GL2.glVertex2f(55f, 0f);
+        m_GL2.glVertex2f(35f, 0f);
+        m_GL2.glEnd();  
+    }
+    
     public int GetHighScore()
     {
         return m_HighScore;
     }
     
+    public int GetPoints()
+    {
+        return m_Points;
+    }
+    
     public void MoveLeft()
     {
         if(m_PosX > -20)
+        {
             m_PosX -= 5;
+            m_MatrixPosX--;
+        }
     }
     
     public void MoveRight()
     {
         if(m_PosX < 25)
+        {
             m_PosX += 5;
+            m_MatrixPosX++;
+        }
     }
     
     public void FastDropPiece()
     {
-        if(m_PosY < 19)
+        if(m_PosY > -50)
+        {
             m_PosY -= 5;
+            m_MatrixPosY++;
+        }
     }
     
     public void Execute()
@@ -80,19 +135,40 @@ public class Ingame
     
     private void DropPiece()
     {
-        m_Piece.DropPiece(m_PosX, m_PosY, m_NextPiece);
-        Update();
+        UpdatePiece();
+        CheckPieceBellow();
     }
     
-    private void Update()
+    private void UpdatePiece()
     {
+        m_Piece.DropPiece(m_PosX, m_PosY, m_NextPiece);
         m_UpdateTimer += 0.1f;
         
         if(m_UpdateTimer >= 5f)
         {
+            if( m_PosY < 50)
+                m_MatrixPosY++;
+            
             m_PosY -= 5;
             m_UpdateTimer = 0;
         }
+    }
+    
+    private void CheckPieceBellow()
+    {
+        if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            ResetValues();  
+        }
+    }
+    
+    private void ResetValues()
+    {
+        m_PosX = -20;
+        m_PosY = 50; //Lugar a cima, o valido é 45
+        m_MatrixPosX = 0;
+        m_MatrixPosY = 0;
     }
     
     private String NextPiece()

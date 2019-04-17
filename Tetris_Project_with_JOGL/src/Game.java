@@ -78,7 +78,11 @@ public class Game implements GLEventListener, KeyListener
     
     public void GameScreen()
     {
+        m_Game.CreateScene();
         m_Game.Execute();
+        m_Menu.CreateText(35, 45, "Points", Color.white, 8);
+        m_Menu.CreateText(35, 40, Integer.toString(m_Game.GetPoints()), Color.white, 8);
+        m_Menu.CreateText(40, -5, "Next Piece", Color.white, 7);
     }
     
     public void HowToPlay()
