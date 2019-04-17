@@ -27,8 +27,8 @@ public class Render
         
         
         Game m_GameScreen = new Game();
-        m_Windows.addGLEventListener(m_GameScreen); //adiciona a Cena a Janela  
-        m_Windows.addKeyListener(m_GameScreen); //registra o teclado na janela
+        m_Windows.addGLEventListener(m_GameScreen); 
+        m_Windows.addKeyListener(m_GameScreen);
 
         
         FPSAnimator animator = new FPSAnimator(m_Windows, 60);

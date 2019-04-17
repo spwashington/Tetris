@@ -29,7 +29,7 @@ public class Game implements GLEventListener, KeyListener
         m_GLUT = new GLUT();
         m_Menu = new Menu(m_GL2);
         m_Game = new Ingame(m_GL2);
-        m_Ingame = false;
+        m_Ingame = true;
         m_HowToPlay = false;
         m_Selection = 1;
     }
@@ -48,8 +48,7 @@ public class Game implements GLEventListener, KeyListener
         m_GL2.glClearColor(0, 0, 0, 1);        
         m_GL2.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);       
         m_GL2.glLoadIdentity();
-
-        
+       
         //Game Logic
         if(!m_HowToPlay)
         {
@@ -113,36 +112,79 @@ public class Game implements GLEventListener, KeyListener
             case KeyEvent.VK_ESCAPE:
                 System.exit(0);
                 break;
+                
             case KeyEvent.VK_UP:
-                if(m_Selection > 1)
-                    m_Selection--;
+                KeyUp();
                 break;
+                
             case KeyEvent.VK_DOWN:
-                if(m_Selection < 3)
-                    m_Selection++;
+                KeyDown();
                 break;
+                
             case KeyEvent.VK_ENTER:
-                if(!m_Ingame)
-                {
-                    switch(m_Selection)
-                    {
-                        case 1:
-                            m_Ingame = true;
-                            break;
-                        case 2:
-                            m_HowToPlay = !m_HowToPlay;
-                            break;
-                        case 3:
-                            System.exit(0);
-                            break;
-                    }
-                }
+                KeyEnter();
+                break;
+                
+            case KeyEvent.VK_LEFT:
+                KeyLeft();
+                break;
+                
+            case KeyEvent.VK_RIGHT:
+                KeyRight();
                 break;
         }
     }
-
+    
+    private void KeyEnter()
+    {
+        if(!m_Ingame)
+        {
+            switch(m_Selection)
+            {
+                case 1:
+                    m_Ingame = true;
+                    break;
+                case 2:
+                    m_HowToPlay = !m_HowToPlay;
+                    break;
+                case 3:
+                    System.exit(0);
+                    break;
+            }
+        }
+    }
+    
+    private void KeyLeft()
+    {
+        if(m_Ingame)
+            m_Game.MoveLeft();
+    }
+    
+    private void KeyRight()
+    {
+        if(m_Ingame)
+            m_Game.MoveRight();
+    }
+    
+    private void KeyDown() 
+    {
+        if(m_Selection < 3 && !m_Ingame)
+            m_Selection++;
+        
+        if(m_Ingame)
+            m_Game.FastDropPiece();
+    }
+    
+    private void KeyUp()
+    {
+        if(m_Selection > 1 && !m_Ingame)
+            m_Selection--;
+    }
+    
     @Override
     public void keyReleased(KeyEvent _event) 
     {
     }
+
+    
 }

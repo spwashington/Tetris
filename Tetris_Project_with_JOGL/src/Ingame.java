@@ -22,6 +22,8 @@ public class Ingame
     private int m_PosX;
     private int m_PosY;
     private String m_NextPiece;
+    private Piece m_Piece;
+    private float m_UpdateTimer;
     
     public Ingame(GL2 _openGL2)
     {
@@ -29,10 +31,12 @@ public class Ingame
         m_Glut = new GLUT();
         m_Points = 0;
         m_HighScore = 0;
-        m_PosX = 0;
-        m_PosY = 0;
+        m_PosX = -20;
+        m_PosY = 45;
         m_Grid = new int[10][20];
         m_NextPiece = NextPiece();
+        m_Piece = new Piece(_openGL2, m_NextPiece);
+        m_UpdateTimer = 0;
         
         CreateBoard();
     }
@@ -44,24 +48,26 @@ public class Ingame
     
     public void MoveLeft()
     {
-        if(m_PosX > 0)
-            m_PosX--;
+        if(m_PosX > -20)
+            m_PosX -= 5;
     }
     
     public void MoveRight()
     {
-        if(m_PosX < 9)
-            m_PosX++;
+        if(m_PosX < 25)
+            m_PosX += 5;
     }
     
     public void FastDropPiece()
     {
-        if(m_PosY > 19)
-            m_PosY++;
+        if(m_PosY < 19)
+            m_PosY -= 5;
     }
     
     public void Execute()
     {
+        m_Piece.DrawPiece(m_Grid);
+        DropPiece();
         //Sorteia peça
         //Desenha peça na tela next
         
@@ -74,7 +80,19 @@ public class Ingame
     
     private void DropPiece()
     {
+        m_Piece.DropPiece(m_PosX, m_PosY, m_NextPiece);
+        Update();
+    }
+    
+    private void Update()
+    {
+        m_UpdateTimer += 0.1f;
         
+        if(m_UpdateTimer >= 5f)
+        {
+            m_PosY -= 5;
+            m_UpdateTimer = 0;
+        }
     }
     
     private String NextPiece()
@@ -112,6 +130,6 @@ public class Ingame
             {
                 m_Grid[x][y] = 0;
             }
-        }
+        } 
     }
 }
