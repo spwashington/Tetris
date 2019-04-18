@@ -37,7 +37,6 @@ public class Game implements GLEventListener, KeyListener
     @Override
     public void dispose(GLAutoDrawable _drawable) 
     {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -69,7 +68,7 @@ public class Game implements GLEventListener, KeyListener
     {
         m_Menu.CreateLogo();
         m_Menu.CreateText(-5, 95, "HIGH SCORE", Color.white, 8);
-        m_Menu.CreateText(-5, 90, Integer.toString(m_Game.GetHighScore()), Color.white, 1);
+        m_Menu.CreateText(2, 90, Integer.toString(m_Game.GetHighScore()), Color.white, 1);
         m_Menu.CreateText(-5, -50, "Start Game", Color.white, 8);
         m_Menu.CreateText(-5, -60, "How to Play", Color.white, 8);
         m_Menu.CreateText(-5, -70, "Exit", Color.white, 8);
@@ -83,6 +82,12 @@ public class Game implements GLEventListener, KeyListener
         m_Menu.CreateText(35, 45, "Points", Color.white, 8);
         m_Menu.CreateText(35, 40, Integer.toString(m_Game.GetPoints()), Color.white, 8);
         m_Menu.CreateText(40, -5, "Next Piece", Color.white, 7);
+        
+        if(m_Game.IsGameOver())
+        {
+            m_Menu.CreateText(35, -20, "GAME OVER", Color.red, 8);
+            m_Menu.CreateText(35, -25, "Press ENTER to return to Main Menu", Color.white, 7);
+        }
     }
     
     public void HowToPlay()
@@ -147,6 +152,7 @@ public class Game implements GLEventListener, KeyListener
             {
                 case 1:
                     m_Ingame = true;
+                    m_Game.NewGame();
                     break;
                 case 2:
                     m_HowToPlay = !m_HowToPlay;
@@ -156,17 +162,22 @@ public class Game implements GLEventListener, KeyListener
                     break;
             }
         }
+        
+        if(m_Game.IsGameOver())
+        {
+            m_Ingame = false;
+        }
     }
     
     private void KeyLeft()
     {
-        if(m_Ingame)
+        if(m_Ingame && !m_Game.IsGameOver())
             m_Game.MoveLeft();
     }
     
     private void KeyRight()
     {
-        if(m_Ingame)
+        if(m_Ingame && !m_Game.IsGameOver())
             m_Game.MoveRight();
     }
     
@@ -175,7 +186,7 @@ public class Game implements GLEventListener, KeyListener
         if(m_Selection < 3 && !m_Ingame)
             m_Selection++;
         
-        if(m_Ingame)
+        if(m_Ingame && !m_Game.IsGameOver())
             m_Game.FastDropPiece();
     }
     

@@ -45,6 +45,19 @@ public class Ingame
         CreateBoard();
     }
     
+    public void NewGame()
+    {
+        m_Points = 0;
+        m_PosX = -20;
+        m_PosY = 50; //Lugar a cima, o valido é 45
+        m_MatrixPosX = 0;
+        m_MatrixPosY = 0;
+        m_NextPiece = NextPiece();
+        m_UpdateTimer = 0;
+        
+        CreateBoard();
+    }
+    
     public void CreateScene()
     {
         m_GL2.glLineWidth(10.0f);
@@ -94,7 +107,7 @@ public class Ingame
     
     public void MoveLeft()
     {
-        if(m_PosX > -20)
+        if(m_PosX > -20 && LeftCanMove())
         {
             m_PosX -= 5;
             m_MatrixPosX--;
@@ -103,16 +116,42 @@ public class Ingame
     
     public void MoveRight()
     {
-        if(m_PosX < 25)
+        if(m_PosX < 25 && RightCanMove())
         {
             m_PosX += 5;
             m_MatrixPosX++;
         }
     }
     
+    private boolean LeftCanMove()
+    {
+        if( m_MatrixPosX > 0)
+        {
+            if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] == 0)
+                return true;
+            else
+                return false;
+        }
+        else
+            return false;
+    }
+    
+    private boolean RightCanMove()
+    {
+        if( m_MatrixPosX < 19)
+        {
+            if(m_Grid[m_MatrixPosX+1][m_MatrixPosY] == 0)
+                return true;
+            else
+                return false;
+        }
+        else
+            return false;
+    }
+    
     public void FastDropPiece()
     {
-        if(m_PosY > -50)
+        if(m_PosY > -45)
         {
             m_PosY -= 5;
             m_MatrixPosY++;
@@ -122,7 +161,10 @@ public class Ingame
     public void Execute()
     {
         m_Piece.DrawPiece(m_Grid);
-        DropPiece();
+        
+        if(!IsGameOver())
+            DropPiece();
+        
         //Sorteia peça
         //Desenha peça na tela next
         
@@ -135,6 +177,7 @@ public class Ingame
     
     private void DropPiece()
     {
+        MakePoints();
         UpdatePiece();
         CheckPieceBellow();
     }
@@ -156,10 +199,56 @@ public class Ingame
     
     private void CheckPieceBellow()
     {
+        if(m_MatrixPosY < 19)
+        {
+            if(m_Grid[m_MatrixPosX][m_MatrixPosY+1] == 1)
+            {
+               m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+               ResetValues();
+            }
+        }
         if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
         {
             m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
             ResetValues();  
+        }  
+    }
+    
+    private void MakePoints()
+    {
+        boolean lineFull = false;
+        
+        for(int y = 0; y < m_Grid[0].length; y++)
+        {
+            for(int x = 0; x < m_Grid.length; x++)
+            {
+                if(m_Grid[x][y] == 1)
+                    lineFull = true;
+                else
+                {
+                    lineFull = false;
+                    break;
+                }
+            }
+            
+            if(lineFull)
+            {
+                m_Points += 100;
+                
+                for(int i = 0; i < m_Grid.length; i++)
+                {
+                    m_Grid[i][y] = 0;
+                }
+                
+                for(int i = y; i > 0; i--)
+                {
+                    for(int z = 0; z < m_Grid.length; z++)
+                    {
+                        m_Grid[z][i] = m_Grid[z][i-1];
+                        m_Grid[z][i-1] = 0;
+                    }
+                }
+            }
         }
     }
     
@@ -169,6 +258,24 @@ public class Ingame
         m_PosY = 50; //Lugar a cima, o valido é 45
         m_MatrixPosX = 0;
         m_MatrixPosY = 0;
+    }
+    
+    public boolean IsGameOver()
+    {
+        if(m_MatrixPosY == 0)
+        {
+            if(m_Grid[m_MatrixPosX][m_MatrixPosY] == 1)
+            {
+                if(m_HighScore < m_Points)
+                    m_HighScore = m_Points;
+                
+                return true;
+            }
+            else
+                return false;
+        }
+        else
+            return false;
     }
     
     private String NextPiece()
@@ -200,6 +307,38 @@ public class Ingame
     
     private void CreateBoard()
     {
+        /*
+        m_Grid[9][19] = 1;
+        m_Grid[8][19] = 1;
+        m_Grid[7][19] = 1;
+        m_Grid[6][19] = 1;
+        m_Grid[5][19] = 1;
+        m_Grid[4][19] = 1;
+        m_Grid[3][19] = 1;
+        m_Grid[2][19] = 1;
+        m_Grid[1][19] = 1;
+        
+        /*m_Grid[0][18] = 1;
+        m_Grid[8][18] = 1;
+        m_Grid[7][18] = 1;
+        m_Grid[6][18] = 1;
+        m_Grid[5][18] = 1;
+        m_Grid[4][18] = 1;
+        m_Grid[3][18] = 1;
+        m_Grid[2][18] = 1;
+        m_Grid[1][18] = 1;
+        
+         m_Grid[9][17] = 1;
+        m_Grid[8][17] = 1;
+        m_Grid[7][17] = 1;
+        m_Grid[6][17] = 1;
+        m_Grid[5][17] = 1;
+        m_Grid[4][17] = 1;
+        m_Grid[3][17] = 1;
+        m_Grid[2][17] = 1;
+        m_Grid[1][17] = 1;
+*/
+        
         for(int x = 0; x < m_Grid.length; x++)
         {
             for(int y = 0; y < m_Grid[x].length; y++)

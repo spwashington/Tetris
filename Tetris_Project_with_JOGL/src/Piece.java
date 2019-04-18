@@ -76,9 +76,4 @@ public class Piece
         
         return pos;
     }
-    
-    private void PlacePiece()
-    {
-        
-    }
 }
