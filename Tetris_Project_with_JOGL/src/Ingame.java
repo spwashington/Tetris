@@ -24,6 +24,7 @@ public class Ingame
     private int m_PosX;
     private int m_PosY;
     private String m_NextPiece;
+    private String m_CurrentPiece;
     private Piece m_Piece;
     private float m_UpdateTimer;
     
@@ -33,11 +34,12 @@ public class Ingame
         m_Glut = new GLUT();
         m_Points = 0;
         m_HighScore = 0;
-        m_PosX = -20;
+        m_PosX = 5;
         m_PosY = 50; //Lugar a cima, o valido é 45
         m_Grid = new int[10][20];
-        m_MatrixPosX = 0;
+        m_MatrixPosX = 5;
         m_MatrixPosY = 0;
+        m_CurrentPiece = NextPiece();
         m_NextPiece = NextPiece();
         m_Piece = new Piece(_openGL2, m_NextPiece);
         m_UpdateTimer = 0;
@@ -48,10 +50,11 @@ public class Ingame
     public void NewGame()
     {
         m_Points = 0;
-        m_PosX = -20;
+        m_PosX = 5;
         m_PosY = 50; //Lugar a cima, o valido é 45
-        m_MatrixPosX = 0;
+        m_MatrixPosX = 5;
         m_MatrixPosY = 0;
+        m_CurrentPiece = NextPiece();
         m_NextPiece = NextPiece();
         m_UpdateTimer = 0;
         
@@ -160,18 +163,12 @@ public class Ingame
     
     public void Execute()
     {
-        m_Piece.DrawPiece(m_Grid);
+        m_CurrentPiece = "T"; //TEST
+        
+        m_Piece.DrawPieceInBoard(m_Grid);
         
         if(!IsGameOver())
             DropPiece();
-        
-        //Sorteia peça
-        //Desenha peça na tela next
-        
-        //Ver peça que ta na fila
-        //Desenhar na tela
-        //Sortear outra peça
-        //desenha nova peça
         
     }
     
@@ -179,12 +176,13 @@ public class Ingame
     {
         MakePoints();
         UpdatePiece();
-        CheckPieceBellow();
+        //CheckPieceBellow();
+        CheckBoard();
     }
     
     private void UpdatePiece()
     {
-        m_Piece.DropPiece(m_PosX, m_PosY, m_NextPiece);
+        m_Piece.DropPiece(m_PosX, m_PosY, m_CurrentPiece);
         m_UpdateTimer += 0.1f;
         
         if(m_UpdateTimer >= 5f)
@@ -213,6 +211,153 @@ public class Ingame
             ResetValues();  
         }  
     }
+    
+    private void CheckBoard()
+    {
+        switch(m_CurrentPiece)
+        {
+            case "Quad":
+                QuadPlace();
+                break;
+            case "Block":
+                BlockPlace();
+                break;
+            case "Tower":
+                TowerPlace();
+                break;
+            case "T":
+                //TPlace();
+                break;
+        }
+    }
+    
+    private boolean BellowHavePiece(int _blockWidth)
+    {
+        boolean have = false;
+        
+        for(int i = 0; i < _blockWidth; i++)
+        {
+            if(m_Grid[m_MatrixPosX + i][m_MatrixPosY + 1] == 1)
+            {
+                have = true;
+                break;
+            }
+        }
+        
+        return have;
+    }
+    
+    //PENSAR MELHOR
+    /*
+    private boolean BellowHavePiece(int _blockWidth, int _blockHeight)
+    {
+        boolean have = false;
+        
+        for(int j = _blockHeight - 1; j > -1; j--)
+        {
+            for(int i = 0; i < _blockWidth; i++)
+            {
+                if(m_Grid[m_MatrixPosX + i][m_MatrixPosY + _blockHeight] == 1)
+                {
+                    have = true;
+                    break;
+                }
+            }
+        }
+        
+        return have;
+    }
+    */
+    private void QuadPlace()
+    {
+        if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
+            ResetValues();  
+        }
+        else if(BellowHavePiece(2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
+            ResetValues();
+        }
+    }
+    
+    /*private void TPlace()
+    {
+        if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 1;
+            ResetValues();  
+        }
+        else if(BellowHavePiece(1, 2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 1;
+            ResetValues();
+        }
+    }*/
+    
+    private void TowerPlace()
+    {
+        if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY - 1] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY - 2] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY - 3] = 1;
+            ResetValues();  
+        }
+        else if(BellowHavePiece(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY - 1] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY - 2] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY - 3] = 1;
+            ResetValues();
+        }
+    }
+    
+    private void BlockPlace()
+    {
+        if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            ResetValues();  
+        }
+        else if(BellowHavePiece(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            ResetValues();
+        }
+    }
+    
+    /*
+    private boolean CanMove(int _blockWidth, int _blockHeight)
+    {
+        boolean move = true;
+        
+        for(int i = 0; i < _blockWidth; i++)
+        {
+            if(m_Grid[m_MatrixPosX + i][m_MatrixPosY + 1] == 1)
+            {
+                move = false;
+                break;
+            }
+        }
+        
+        return move;
+    }*/
     
     private void MakePoints()
     {
@@ -254,10 +399,12 @@ public class Ingame
     
     private void ResetValues()
     {
-        m_PosX = -20;
-        m_PosY = 50; //Lugar a cima, o valido é 45
-        m_MatrixPosX = 0;
+        m_PosX = 5;
+        m_PosY = 50;
+        m_MatrixPosX = 5;
         m_MatrixPosY = 0;
+        m_CurrentPiece = m_NextPiece;
+        m_NextPiece = NextPiece();
     }
     
     public boolean IsGameOver()
@@ -307,38 +454,6 @@ public class Ingame
     
     private void CreateBoard()
     {
-        /*
-        m_Grid[9][19] = 1;
-        m_Grid[8][19] = 1;
-        m_Grid[7][19] = 1;
-        m_Grid[6][19] = 1;
-        m_Grid[5][19] = 1;
-        m_Grid[4][19] = 1;
-        m_Grid[3][19] = 1;
-        m_Grid[2][19] = 1;
-        m_Grid[1][19] = 1;
-        
-        /*m_Grid[0][18] = 1;
-        m_Grid[8][18] = 1;
-        m_Grid[7][18] = 1;
-        m_Grid[6][18] = 1;
-        m_Grid[5][18] = 1;
-        m_Grid[4][18] = 1;
-        m_Grid[3][18] = 1;
-        m_Grid[2][18] = 1;
-        m_Grid[1][18] = 1;
-        
-         m_Grid[9][17] = 1;
-        m_Grid[8][17] = 1;
-        m_Grid[7][17] = 1;
-        m_Grid[6][17] = 1;
-        m_Grid[5][17] = 1;
-        m_Grid[4][17] = 1;
-        m_Grid[3][17] = 1;
-        m_Grid[2][17] = 1;
-        m_Grid[1][17] = 1;
-*/
-        
         for(int x = 0; x < m_Grid.length; x++)
         {
             for(int y = 0; y < m_Grid[x].length; y++)
