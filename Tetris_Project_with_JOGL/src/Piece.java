@@ -216,19 +216,19 @@ public class Piece
         m_GL2.glPopMatrix();
         
         m_GL2.glPushMatrix();
-        m_GL2.glTranslatef(_posX - 5, _posY, 0);
-        m_GL2.glColor3f(1, 1, 1);
-        m_Glut.glutSolidCube(5);
-        m_GL2.glPopMatrix();
-        
-        m_GL2.glPushMatrix();
-        m_GL2.glTranslatef(_posX, _posY + 5, 0);
+        m_GL2.glTranslatef(_posX + 5, _posY, 0);
         m_GL2.glColor3f(1, 1, 1);
         m_Glut.glutSolidCube(5);
         m_GL2.glPopMatrix();
         
         m_GL2.glPushMatrix();
         m_GL2.glTranslatef(_posX + 5, _posY + 5, 0);
+        m_GL2.glColor3f(1, 1, 1);
+        m_Glut.glutSolidCube(5);
+        m_GL2.glPopMatrix();
+        
+        m_GL2.glPushMatrix();
+        m_GL2.glTranslatef(_posX + 10, _posY + 5, 0);
         m_GL2.glColor3f(1, 1, 1);
         m_Glut.glutSolidCube(5);
         m_GL2.glPopMatrix();

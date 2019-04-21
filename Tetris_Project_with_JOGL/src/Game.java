@@ -83,6 +83,8 @@ public class Game implements GLEventListener, KeyListener
         m_Menu.CreateText(35, 40, Integer.toString(m_Game.GetPoints()), Color.white, 8);
         m_Menu.CreateText(40, -5, "Next Piece", Color.white, 7);
         
+        m_Menu.CreateText(40, -25, m_Game.tttttt(), Color.white, 7);
+        
         if(m_Game.IsGameOver())
         {
             m_Menu.CreateText(35, -20, "GAME OVER", Color.red, 8);

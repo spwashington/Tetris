@@ -112,8 +112,9 @@ public class Ingame
     {
         if(m_PosX > -20 && LeftCanMove())
         {
-            m_PosX -= 5;
             m_MatrixPosX--;
+            m_PosX -= 5;
+            CheckBoard();
         }
     }
     
@@ -121,8 +122,9 @@ public class Ingame
     {
         if(m_PosX < 25 && RightCanMove())
         {
-            m_PosX += 5;
             m_MatrixPosX++;
+            m_PosX += 5;
+            CheckBoard();
         }
     }
     
@@ -163,7 +165,7 @@ public class Ingame
     
     public void Execute()
     {
-        m_CurrentPiece = "T"; //TEST
+        //m_CurrentPiece = "Pr"; //TEST
         
         m_Piece.DrawPieceInBoard(m_Grid);
         
@@ -172,12 +174,15 @@ public class Ingame
         
     }
     
+    public String tttttt()
+    {
+        return "cu: " + m_CurrentPiece + "  next: " + m_NextPiece;
+    }
+    
     private void DropPiece()
     {
         MakePoints();
         UpdatePiece();
-        //CheckPieceBellow();
-        CheckBoard();
     }
     
     private void UpdatePiece()
@@ -191,25 +196,9 @@ public class Ingame
                 m_MatrixPosY++;
             
             m_PosY -= 5;
+            CheckBoard();
             m_UpdateTimer = 0;
         }
-    }
-    
-    private void CheckPieceBellow()
-    {
-        if(m_MatrixPosY < 19)
-        {
-            if(m_Grid[m_MatrixPosX][m_MatrixPosY+1] == 1)
-            {
-               m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-               ResetValues();
-            }
-        }
-        if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
-        {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            ResetValues();  
-        }  
     }
     
     private void CheckBoard()
@@ -226,12 +215,62 @@ public class Ingame
                 TowerPlace();
                 break;
             case "T":
-                //TPlace();
+                TPlace();
+                break;
+            case "Zl":
+                ZlPlace();
+                break;
+            case "Zr":
+                ZrPlace();
+                break;
+            case "Pl":
+                PlPlace();
+                break;
+            case "Pr":
+                PrPlace();
                 break;
         }
     }
     
-    private boolean BellowHavePiece(int _blockWidth)
+    private boolean HavePieceBellowTop(int _blockWidth, int _blockHeight, int _blockTopStartInPos)
+    {
+         boolean have = false;
+         int top = _blockHeight - 1;
+         
+        if(m_MatrixPosY > 1)
+        {
+            for(int i = 0; i < _blockWidth; i++)
+            {
+                if(m_Grid[(m_MatrixPosX + _blockTopStartInPos) + i][(m_MatrixPosY - top) + 1] == 1)
+                {
+                    have = true;
+                    break;
+                }
+            }
+        }
+         
+         return have;
+    }
+    
+    private boolean HavePieceBellowTop(int _blockWidth, int _blockHeight)
+    {
+         boolean have = false;
+         int top = _blockHeight - 1;
+         
+         if(m_MatrixPosY > 1)
+         for(int i = 0; i < _blockWidth; i++)
+        {
+            if(m_Grid[m_MatrixPosX + i][(m_MatrixPosY - top) + 1] == 1)
+            {
+                have = true;
+                break;
+            }
+        }
+         
+         return have;
+    }
+    
+    private boolean HavePieceBellowBase(int _blockWidth)
     {
         boolean have = false;
         
@@ -247,27 +286,6 @@ public class Ingame
         return have;
     }
     
-    //PENSAR MELHOR
-    /*
-    private boolean BellowHavePiece(int _blockWidth, int _blockHeight)
-    {
-        boolean have = false;
-        
-        for(int j = _blockHeight - 1; j > -1; j--)
-        {
-            for(int i = 0; i < _blockWidth; i++)
-            {
-                if(m_Grid[m_MatrixPosX + i][m_MatrixPosY + _blockHeight] == 1)
-                {
-                    have = true;
-                    break;
-                }
-            }
-        }
-        
-        return have;
-    }
-    */
     private void QuadPlace()
     {
         if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
@@ -278,7 +296,7 @@ public class Ingame
             m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
             ResetValues();  
         }
-        else if(BellowHavePiece(2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+        else if(HavePieceBellowBase(2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
         {
             m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
             m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
@@ -288,7 +306,7 @@ public class Ingame
         }
     }
     
-    /*private void TPlace()
+    private void TPlace()
     {
         if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
         {
@@ -298,7 +316,7 @@ public class Ingame
             m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 1;
             ResetValues();  
         }
-        else if(BellowHavePiece(1, 2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+        else if(HavePieceBellowTop(3, 2, -1) && m_MatrixPosY > 0)
         {
             m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
             m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
@@ -306,7 +324,127 @@ public class Ingame
             m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 1;
             ResetValues();
         }
-    }*/
+        else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 1;
+            ResetValues();
+        }
+    }
+    
+    private void ZlPlace()
+    {
+        if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 1;
+            ResetValues();  
+        }
+        else if(HavePieceBellowTop(2, 2, -1) && m_MatrixPosY > 0)
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 1;
+            ResetValues();
+        }
+        else if(HavePieceBellowBase(2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 1;
+            ResetValues();
+        }
+    }
+    
+    private void ZrPlace()
+    {
+        if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 1;
+            ResetValues();  
+        }
+        else if(HavePieceBellowTop(2, 2) && m_MatrixPosY > 0)
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 1;
+            ResetValues();
+        }
+        else if(HavePieceBellowBase(2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 1;
+            ResetValues();
+        }
+    }
+    
+    private void PlPlace()
+    {
+        if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 1;
+            m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] = 1;
+            ResetValues();  
+        }
+        else if(HavePieceBellowTop(2, 3, -1) && m_MatrixPosY > 2)
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 1;
+            m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] = 1;
+            ResetValues();
+        }
+        else if(HavePieceBellowBase(2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 1;
+            m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] = 1;
+            ResetValues();
+        }
+    }
+    
+    private void PrPlace()
+    {
+        if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] = 1;
+            ResetValues();  
+        }
+        else if(HavePieceBellowTop(2, 3) && m_MatrixPosY > 2)
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] = 1;
+            ResetValues();
+        }
+        else if(HavePieceBellowBase(2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+        {
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] = 1;
+            ResetValues();
+        }
+    }
     
     private void TowerPlace()
     {
@@ -318,7 +456,7 @@ public class Ingame
             m_Grid[m_MatrixPosX][m_MatrixPosY - 3] = 1;
             ResetValues();  
         }
-        else if(BellowHavePiece(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+        else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
         {
             m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
             m_Grid[m_MatrixPosX][m_MatrixPosY - 1] = 1;
@@ -335,7 +473,7 @@ public class Ingame
             m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
             ResetValues();  
         }
-        else if(BellowHavePiece(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+        else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
         {
             m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
             ResetValues();
