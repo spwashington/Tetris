@@ -196,6 +196,9 @@ public class Game implements GLEventListener, KeyListener
     {
         if(m_Selection > 1 && !m_Ingame)
             m_Selection--;
+        
+        if(m_Ingame && !m_Game.IsGameOver())
+            m_Game.RotatePiece();
     }
     
     @Override

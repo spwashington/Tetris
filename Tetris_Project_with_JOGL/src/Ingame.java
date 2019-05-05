@@ -170,7 +170,7 @@ public class Ingame
     
     public void Execute()
     {
-        //m_CurrentPiece = "Pl"; //TEST
+        m_CurrentPiece = "Tower"; //TEST
         
         m_Piece.DrawPieceInBoard(m_Grid);
         
@@ -183,7 +183,7 @@ public class Ingame
         return "cu: " + m_CurrentPiece + "  next: " + m_NextPiece + 
                 "   vecRt: " + (m_Grid.length - m_Piece.GetPieceLimit(m_CurrentPiece)[0]) + 
                 "   vecLt: " + (m_Grid.length - m_Piece.GetPieceLimit(m_CurrentPiece)[1]) +
-                "   XPOSMAT: " + m_MatrixPosX + "Press: " + m_FastDropPiece;
+                "   Rotate: " + m_Piece.ttttt();
     }
     
     private void DropPiece()
@@ -233,7 +233,7 @@ public class Ingame
     
     private void UpdateNextPiece()
     {
-        m_Piece.DropPiece(40, 10, m_NextPiece);
+        m_Piece.DropPiece(43, 10, m_NextPiece, true);
     }
     
     private void CheckBoard()
@@ -276,7 +276,7 @@ public class Ingame
         {
             for(int i = 0; i < _blockWidth; i++)
             {
-                if(m_Grid[(m_MatrixPosX + _blockTopStartInPos) + i][(m_MatrixPosY - top) + 1] == 1)
+                if(m_Grid[(m_MatrixPosX + _blockTopStartInPos) + i][(m_MatrixPosY - top) + 1] > 0)
                 {
                     have = true;
                     break;
@@ -295,7 +295,7 @@ public class Ingame
          if(m_MatrixPosY > 1)
          for(int i = 0; i < _blockWidth; i++)
         {
-            if(m_Grid[m_MatrixPosX + i][(m_MatrixPosY - top) + 1] == 1)
+            if(m_Grid[m_MatrixPosX + i][(m_MatrixPosY - top) + 1] > 0)
             {
                 have = true;
                 break;
@@ -311,7 +311,7 @@ public class Ingame
         
         for(int i = 0; i < _blockWidth; i++)
         {
-            if(m_Grid[m_MatrixPosX + i][m_MatrixPosY + 1] == 1)
+            if(m_Grid[m_MatrixPosX + i][m_MatrixPosY + 1] > 0)
             {
                 have = true;
                 break;
@@ -343,161 +343,534 @@ public class Ingame
     
     private void TPlace()
     {
+        switch(m_Piece.GetRotateValue())
+        {
+            case 0:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 2;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 2;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowTop(3, 2, -1) && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 2;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 2;
+                    ResetValues();
+                }
+                else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 2;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 2;
+                    ResetValues();
+                }
+                break;
+               
+            case 90:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 2;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 2;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowTop(1, 2, -1) && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 2;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 2;
+                    ResetValues();
+                }
+                else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 2;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 2;
+                    ResetValues();
+                }
+                break;
+               
+            case 180:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 2;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 2;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY] = 2;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowTop(3, 1) && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 2;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 2;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY] = 2;
+                    ResetValues();
+                }
+                else if(HavePieceBellowBase(3) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 2;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 2;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY] = 2;
+                    ResetValues();
+                }
+                break;
+               
+            case 270:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 2;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 2;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowTop(1, 2, +1) && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 2;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 2;
+                    ResetValues();
+                }
+                else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 2;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 2;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 2;
+                    ResetValues();
+                }
+                break;
+        }
+               
         if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
         {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 2;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 2;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 2;
+            m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 2;
             ResetValues();  
         }
         else if(HavePieceBellowTop(3, 2, -1) && m_MatrixPosY > 0)
         {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 2;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 2;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 2;
+            m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 2;
             ResetValues();
         }
         else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
         {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 2;
+            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 2;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 2;
+            m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 2;
             ResetValues();
         }
     }
     
     private void ZlPlace()
     {
-        if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+        switch(m_Piece.GetRotateValue())
         {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 1;
-            ResetValues();  
-        }
-        else if(HavePieceBellowTop(2, 2, -1) && m_MatrixPosY > 0)
-        {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 1;
-            ResetValues();
-        }
-        else if(HavePieceBellowBase(2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
-        {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 1;
-            ResetValues();
+            case 90:
+            case 270:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 3;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 3;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 3;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] = 3;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowTop(1, 3, +1) && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 3;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 3;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 3;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] = 3;
+                    ResetValues();
+                }
+                else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 3;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 3;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 3;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] = 3;
+                    ResetValues();
+                }
+                break;
+             
+            default:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 3;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 3;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 3;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 3;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowTop(2, 2, -1) && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 3;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 3;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 3;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 3;
+                    ResetValues();
+                }
+                else if(HavePieceBellowBase(2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 3;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 3;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 3;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 3;
+                    ResetValues();
+                }
+                break;
         }
     }
     
     private void ZrPlace()
     {
-        if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+        switch(m_Piece.GetRotateValue())
         {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 1;
-            ResetValues();  
-        }
-        else if(HavePieceBellowTop(2, 3) && m_MatrixPosY > 0)
-        {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 1;
-            ResetValues();
-        }
-        else if(HavePieceBellowBase(2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
-        {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 1;
-            ResetValues();
+            case 90:
+            case 270:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 4;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 4;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 4;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] = 4;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowTop(1, 3) && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 4;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 4;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 4;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] = 4;
+                    ResetValues();
+                }
+                else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 4;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 4;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 4;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] = 4;
+                    ResetValues();
+                }
+                break;
+                
+            default:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 4;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 4;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 4;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 4;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowTop(2, 3) && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 4;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 4;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 4;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 4;
+                    ResetValues();
+                }
+                else if(HavePieceBellowBase(2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 4;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 4;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 4;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 4;
+                    ResetValues();
+                }
+                break;
         }
     }
     
     private void PlPlace()
     {
-        if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+        switch(m_Piece.GetRotateValue())
         {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 1;
-            m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] = 1;
-            ResetValues();  
-        }
-        else if(HavePieceBellowTop(2, 3, -1) && m_MatrixPosY > 2)
-        {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 1;
-            m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] = 1;
-            ResetValues();
-        }
-        else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
-        {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 1;
-            m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] = 1;
-            ResetValues();
+            case 0:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 5;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 5;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] = 5;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowTop(2, 3, -1) && m_MatrixPosY > 2)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 5;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 5;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] = 5;
+                    ResetValues();
+                }
+                else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 5;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 5;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] = 5;
+                    ResetValues();
+                }
+                break;
+                
+            case 90:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 5;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowTop(3, 2, +2) && m_MatrixPosY > 2)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 5;
+                    ResetValues();
+                }
+                else if(HavePieceBellowBase(3) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 5;
+                    ResetValues();
+                }
+                break;
+                
+            case 180:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 5;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 5;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowTop(2, 3) && m_MatrixPosY > 2)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 5;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 5;
+                    ResetValues();
+                }
+                else if(HavePieceBellowBase(2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 5;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 5;
+                    ResetValues();
+                }
+                break;
+                
+                case 270:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 5;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 5;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 5;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowTop(1, 2, 1) && m_MatrixPosY > 2)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 5;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 5;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 5;
+                    ResetValues();
+                }
+                else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 5;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 5;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 5;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 5;
+                    ResetValues();
+                }
+                break;
         }
     }
     
     private void PrPlace()
     {
-        if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+        switch(m_Piece.GetRotateValue())
         {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] = 1;
-            ResetValues();  
-        }
-        else if(HavePieceBellowTop(2, 3) && m_MatrixPosY > 2)
-        {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] = 1;
-            ResetValues();
-        }
-        else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
-        {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] = 1;
-            ResetValues();
+            case 0:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 6;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 6;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] = 6;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowTop(2, 3) && m_MatrixPosY > 2)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 6;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 6;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] = 6;
+                    ResetValues();
+                }
+                else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 6;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-2] = 6;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] = 6;
+                    ResetValues();
+                }
+                break;
+                
+            case 90:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 6;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 6;
+                    m_Grid[m_MatrixPosX-2][m_MatrixPosY-1] = 6;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowTop(1, 2) && m_MatrixPosY > 2)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 6;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 6;
+                    m_Grid[m_MatrixPosX-2][m_MatrixPosY-1] = 6;
+                    ResetValues();
+                }
+                else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 6;
+                    m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] = 6;
+                    m_Grid[m_MatrixPosX-2][m_MatrixPosY-1] = 6;
+                    ResetValues();
+                }
+                break;
+                
+            case 180:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 6;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] = 6;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowTop(2, 3) && m_MatrixPosY > 2)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 6;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] = 6;
+                    ResetValues();
+                }
+                else if(HavePieceBellowBase(2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 6;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] = 6;
+                    ResetValues();
+                }
+                break;
+                
+            case 270:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 6;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY] = 6;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowTop(3, 2) && m_MatrixPosY > 2)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 6;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY] = 6;
+                    ResetValues();
+                }
+                else if(HavePieceBellowBase(3) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 6;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 6;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY] = 6;
+                    ResetValues();
+                }
+                break;
         }
     }
     
     private void TowerPlace()
     {
-        if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+        switch(m_Piece.GetRotateValue())
         {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY - 1] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY - 2] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY - 3] = 1;
-            ResetValues();  
-        }
-        else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
-        {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY - 1] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY - 2] = 1;
-            m_Grid[m_MatrixPosX][m_MatrixPosY - 3] = 1;
-            ResetValues();
+            case 90:
+            case 270:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 7;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 7;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY] = 7;
+                    m_Grid[m_MatrixPosX+3][m_MatrixPosY] = 7;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowBase(3) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 7;
+                    m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 7;
+                    m_Grid[m_MatrixPosX+2][m_MatrixPosY] = 7;
+                    m_Grid[m_MatrixPosX+3][m_MatrixPosY] = 7;
+                    ResetValues();
+                }
+                break;
+            default:
+                if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 7;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY - 1] = 7;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY - 2] = 7;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY - 3] = 7;
+                    ResetValues();  
+                }
+                else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+                {
+                    m_Grid[m_MatrixPosX][m_MatrixPosY] = 7;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY - 1] = 7;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY - 2] = 7;
+                    m_Grid[m_MatrixPosX][m_MatrixPosY - 3] = 7;
+                    ResetValues();
+                }
+                break;
         }
     }
     
@@ -505,16 +878,20 @@ public class Ingame
     {
         if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
         {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 8;
             ResetValues();  
         }
         else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
         {
-            m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX][m_MatrixPosY] = 8;
             ResetValues();
         }
     }
     
+    public void RotatePiece()
+    {
+        m_Piece.Rotate();
+    }
     /*
     private boolean CanMove(int _blockWidth, int _blockHeight)
     {
@@ -540,7 +917,7 @@ public class Ingame
         {
             for(int x = 0; x < m_Grid.length; x++)
             {
-                if(m_Grid[x][y] == 1)
+                if(m_Grid[x][y] > 0)
                     lineFull = true;
                 else
                 {
@@ -573,6 +950,7 @@ public class Ingame
     
     private void ResetValues()
     {
+        m_Piece.RestartRotate();
         m_PosX = 5;
         m_PosY = 50;
         m_MatrixPosX = 5;
@@ -585,7 +963,7 @@ public class Ingame
     {
         if(m_MatrixPosY == 0)
         {
-            if(m_Grid[m_MatrixPosX][m_MatrixPosY] == 1)
+            if(m_Grid[m_MatrixPosX][m_MatrixPosY] > 0)
             {
                 if(m_HighScore < m_Points)
                     m_HighScore = m_Points;
