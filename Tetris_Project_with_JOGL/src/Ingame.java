@@ -27,6 +27,8 @@ public class Ingame
     private String m_CurrentPiece;
     private Piece m_Piece;
     private float m_UpdateTimer;
+    private boolean m_FastDropPiece;
+    private float m_DropSpeed;
     
     public Ingame(GL2 _openGL2)
     {
@@ -43,6 +45,8 @@ public class Ingame
         m_NextPiece = NextPiece();
         m_Piece = new Piece(_openGL2, m_NextPiece);
         m_UpdateTimer = 0;
+        m_FastDropPiece = false;
+        m_DropSpeed = 5f;
         
         CreateBoard();
     }
@@ -130,9 +134,9 @@ public class Ingame
     
     private boolean LeftCanMove()
     {
-        if( m_MatrixPosX > 0)
+        if( m_MatrixPosX > (m_Piece.GetPieceLimit(m_CurrentPiece)[1] - 1))
         {
-            if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] == 0)
+            if(m_Grid[m_MatrixPosX - m_Piece.GetPieceLimit(m_CurrentPiece)[1]][m_MatrixPosY] == 0)
                 return true;
             else
                 return false;
@@ -143,9 +147,9 @@ public class Ingame
     
     private boolean RightCanMove()
     {
-        if( m_MatrixPosX < 19)
+        if( m_MatrixPosX < (m_Grid.length - m_Piece.GetPieceLimit(m_CurrentPiece)[0])) //tava 19
         {
-            if(m_Grid[m_MatrixPosX+1][m_MatrixPosY] == 0)
+            if(m_Grid[m_MatrixPosX + m_Piece.GetPieceLimit(m_CurrentPiece)[0]][m_MatrixPosY] == 0)
                 return true;
             else
                 return false;
@@ -154,35 +158,46 @@ public class Ingame
             return false;
     }
     
+    public void NormalDropPiece()
+    {
+        m_FastDropPiece = false;
+    }
+    
     public void FastDropPiece()
     {
-        if(m_PosY > -45)
-        {
-            m_PosY -= 5;
-            m_MatrixPosY++;
-        }
+        m_FastDropPiece = true;
     }
     
     public void Execute()
     {
-        //m_CurrentPiece = "Pr"; //TEST
+        //m_CurrentPiece = "Pl"; //TEST
         
         m_Piece.DrawPieceInBoard(m_Grid);
         
         if(!IsGameOver())
-            DropPiece();
-        
+            DropPiece(); 
     }
     
     public String tttttt()
     {
-        return "cu: " + m_CurrentPiece + "  next: " + m_NextPiece;
+        return "cu: " + m_CurrentPiece + "  next: " + m_NextPiece + 
+                "   vecRt: " + (m_Grid.length - m_Piece.GetPieceLimit(m_CurrentPiece)[0]) + 
+                "   vecLt: " + (m_Grid.length - m_Piece.GetPieceLimit(m_CurrentPiece)[1]) +
+                "   XPOSMAT: " + m_MatrixPosX + "Press: " + m_FastDropPiece;
     }
     
     private void DropPiece()
     {
         MakePoints();
         UpdatePiece();
+        UpdateNextPiece();
+        UpdateSpeed();
+    }
+    
+    private void UpdateSpeed()
+    {
+        if(m_Points > 5000)
+            m_DropSpeed = 0.5f;
     }
     
     private void UpdatePiece()
@@ -190,15 +205,35 @@ public class Ingame
         m_Piece.DropPiece(m_PosX, m_PosY, m_CurrentPiece);
         m_UpdateTimer += 0.1f;
         
-        if(m_UpdateTimer >= 5f)
+        if(!m_FastDropPiece)
         {
-            if( m_PosY < 50)
-                m_MatrixPosY++;
-            
-            m_PosY -= 5;
-            CheckBoard();
-            m_UpdateTimer = 0;
+            if(m_UpdateTimer >= 5f)
+            {
+                if( m_PosY < 50)
+                    m_MatrixPosY++;
+
+                m_PosY -= 5;
+                CheckBoard();
+                m_UpdateTimer = 0;
+            }
         }
+        else
+        {
+            if(m_UpdateTimer >= 0.5f)
+            {
+                if( m_PosY < 50)
+                    m_MatrixPosY++;
+
+                m_PosY -= 5;
+                CheckBoard();
+                m_UpdateTimer = 0;
+            }
+        }
+    }
+    
+    private void UpdateNextPiece()
+    {
+        m_Piece.DropPiece(40, 10, m_NextPiece);
     }
     
     private void CheckBoard()
@@ -367,24 +402,24 @@ public class Ingame
         if(m_MatrixPosY == (m_Grid[m_MatrixPosX].length - 1))
         {
             m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
             m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
             m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 1;
             ResetValues();  
         }
-        else if(HavePieceBellowTop(2, 2) && m_MatrixPosY > 0)
+        else if(HavePieceBellowTop(2, 3) && m_MatrixPosY > 0)
         {
             m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
             m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
             m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 1;
             ResetValues();
         }
         else if(HavePieceBellowBase(2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
         {
             m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
-            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
             m_Grid[m_MatrixPosX+1][m_MatrixPosY] = 1;
+            m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] = 1;
             m_Grid[m_MatrixPosX+2][m_MatrixPosY-1] = 1;
             ResetValues();
         }
@@ -408,7 +443,7 @@ public class Ingame
             m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] = 1;
             ResetValues();
         }
-        else if(HavePieceBellowBase(2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+        else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
         {
             m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
             m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
@@ -436,7 +471,7 @@ public class Ingame
             m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] = 1;
             ResetValues();
         }
-        else if(HavePieceBellowBase(2) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
+        else if(HavePieceBellowBase(1) && m_MatrixPosY < 19 && m_MatrixPosY > 0)
         {
             m_Grid[m_MatrixPosX][m_MatrixPosY] = 1;
             m_Grid[m_MatrixPosX][m_MatrixPosY-1] = 1;
@@ -517,6 +552,7 @@ public class Ingame
             if(lineFull)
             {
                 m_Points += 100;
+                m_DropSpeed -= 0.13f;
                 
                 for(int i = 0; i < m_Grid.length; i++)
                 {

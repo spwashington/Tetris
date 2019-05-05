@@ -18,6 +18,7 @@ public class Piece
     private GLUT m_Glut;
     private int m_PosX;
     private int m_PosY;
+    private int [] m_PieceLimit;
     
     public Piece(GL2 _openGL2, String _pieceType)
     {
@@ -25,6 +26,7 @@ public class Piece
         m_Glut = new GLUT();
         m_PosX = -20;
         m_PosY = 45;
+        m_PieceLimit = new int[2];
     }
     
     public void DropPiece(int _posX, int _posY, String _pieceType)
@@ -300,5 +302,48 @@ public class Piece
         }
         
         return pos;
+    }
+    
+    public int[] GetPieceLimit(String _CurrentPiece)
+    {
+        switch(_CurrentPiece)
+        {
+            case "Block":
+                m_PieceLimit[0] = 1; //Right
+                m_PieceLimit[1] = 1; //Left
+                return m_PieceLimit;
+            case "Quad":
+                m_PieceLimit[0] = 2;
+                m_PieceLimit[1] = 1;
+                return m_PieceLimit;
+            case "Zl":
+                m_PieceLimit[0] = 2;
+                m_PieceLimit[1] = 2;
+                return m_PieceLimit;
+            case "Zr":
+                m_PieceLimit[0] = 3;
+                m_PieceLimit[1] = 1;
+                return m_PieceLimit;
+            case "Tower":
+                m_PieceLimit[0] = 1;
+                m_PieceLimit[1] = 1;
+                return m_PieceLimit;
+            case "T":
+                m_PieceLimit[0] = 2;
+                m_PieceLimit[1] = 2;
+                return m_PieceLimit;
+            case "Pl":
+                m_PieceLimit[0] = 1;
+                m_PieceLimit[1] = 2;
+                return m_PieceLimit;
+            case "Pr":
+                m_PieceLimit[0] = 2;
+                m_PieceLimit[1] = 1;
+                return m_PieceLimit;
+            default:
+                m_PieceLimit[0] = 0;
+                m_PieceLimit[1] = 0;
+                return m_PieceLimit;
+        }
     }
 }

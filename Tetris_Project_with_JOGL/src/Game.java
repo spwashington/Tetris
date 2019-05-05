@@ -200,7 +200,13 @@ public class Game implements GLEventListener, KeyListener
     
     @Override
     public void keyReleased(KeyEvent _event) 
-    {
+    {        
+        switch(_event.getKeyCode())
+        {
+            case KeyEvent.VK_DOWN:
+                m_Game.NormalDropPiece();
+                break;
+        }
     }
 
     
