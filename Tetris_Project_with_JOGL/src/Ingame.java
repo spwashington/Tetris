@@ -30,6 +30,7 @@ public class Ingame
     private boolean m_FastDropPiece;
     private float m_DropSpeed;
     
+    private int[] t  = new int[1];
     private String teste = "";
     
     public Ingame(GL2 _openGL2)
@@ -49,6 +50,7 @@ public class Ingame
         m_UpdateTimer = 0;
         m_FastDropPiece = false;
         m_DropSpeed = 5f;
+        
         
         CreateBoard();
     }
@@ -116,34 +118,20 @@ public class Ingame
     
     public void MoveLeft()
     {
-        /*if(m_PosX > -20 && CanMove("Left", GetCurrentPieceLimit("Left")))
+        if(CanMove("Left", GetCurrentPieceLimit("Left")))
         {
             m_MatrixPosX--;
             m_PosX -= 5;
-            CheckBoard();
-        }*/
-        if(m_MatrixPosX > 0 && CanMove("Left", GetCurrentPieceLimit("Left")) && !IsStageLimit("Left"))
-        {
-            m_MatrixPosX--;
-            m_PosX -= 5;
-            CheckBoard();
         }
     }
     
     public void MoveRight()
     {
-        if(m_MatrixPosX < 9 && CanMove("Right", GetCurrentPieceLimit("Right")) && !IsStageLimit("Right"))
+        if(CanMove("Right", GetCurrentPieceLimit("Right")))
         {
             m_MatrixPosX++;
             m_PosX += 5;
-            CheckBoard();
         }
-        /*if(m_PosX < 25 && CanMove("Right", GetCurrentPieceLimit("Right")))
-        {
-            m_MatrixPosX++;
-            m_PosX += 5;
-            CheckBoard();
-        }*/
     }
     
     private boolean IsStageLimit(String _direction)
@@ -163,9 +151,11 @@ public class Ingame
                     case 270:
                         if(m_MatrixPosX == 0)
                             return true;
+                            break;
                     default:
                         if(m_MatrixPosX == 1)
                             return true;
+                            break;
                 }
             }
             else if(m_CurrentPiece == "Zr")
@@ -176,9 +166,11 @@ public class Ingame
                     case 270:
                         if(m_MatrixPosX == 1)
                             return true;
+                            break;
                     default:
                         if(m_MatrixPosX == 0)
                             return true;
+                            break;
                 }
             }
             else if(m_CurrentPiece == "Tower")
@@ -189,9 +181,11 @@ public class Ingame
                     case 270:
                         if(m_MatrixPosX == 0)
                             return true;
+                            break;
                     default:
                         if(m_MatrixPosX == 0)
                             return true;
+                            break;
                 }
             }
             else if(m_CurrentPiece == "T")
@@ -201,15 +195,19 @@ public class Ingame
                     case 0:
                         if(m_MatrixPosX == 1)
                             return true;
+                            break;
                     case 90:
                         if(m_MatrixPosX == 1)
                             return true;
+                            break;
                     case 180:
                         if(m_MatrixPosX == 0)
                             return true;
+                            break;
                     case 270:
                         if(m_MatrixPosX == 0)
                             return true;
+                            break;
                 }
             }
             else if(m_CurrentPiece == "Pl")
@@ -219,15 +217,19 @@ public class Ingame
                     case 0:
                         if(m_MatrixPosX == 1)
                             return true;
+                            break;
                     case 90:
                         if(m_MatrixPosX == 0)
                             return true;
+                            break;
                     case 180:
                         if(m_MatrixPosX == 0)
                             return true;
+                            break;
                     case 270:
                         if(m_MatrixPosX == 0)
                             return true;
+                            break;
                 }
             }
             else if(m_CurrentPiece == "Pr")
@@ -236,16 +238,20 @@ public class Ingame
                 {
                     case 0:
                         if(m_MatrixPosX == 0)
-                            return true;
+                            return true;                            
+                            break;
                     case 90:
                         if(m_MatrixPosX == 2)
-                            return true;
+                            return true;                            
+                            break;
                     case 180:
                         if(m_MatrixPosX == 0)
-                            return true;
+                            return true;                                
+                            break;
                     case 270:
                         if(m_MatrixPosX == 0)
-                            return true;
+                            return true;                            
+                            break;
                 }
             }
             else if(m_CurrentPiece == "Block")
@@ -258,7 +264,7 @@ public class Ingame
         {
             if(m_CurrentPiece == "Quad")
             {
-                if(m_MatrixPosX == 9)
+                if(m_MatrixPosX == 8)
                     return true;
             }
             else if(m_CurrentPiece == "Zl")
@@ -268,10 +274,12 @@ public class Ingame
                     case 90:
                     case 270:
                         if(m_MatrixPosX == 8)
-                            return true;
+                            return true;         
+                            break;
                     default:
                         if(m_MatrixPosX == 8)
-                            return true;
+                            return true;         
+                            break;
                 }
             }
             else if(m_CurrentPiece == "Zr")
@@ -281,10 +289,12 @@ public class Ingame
                     case 90:
                     case 270:
                         if(m_MatrixPosX == 9)
-                            return true;
+                            return true;         
+                            break;
                     default:
-                        if(m_MatrixPosX == 8)
-                            return true;
+                        if(m_MatrixPosX == 7)
+                            return true;         
+                            break;
                 }
             }
             else if(m_CurrentPiece == "Tower")
@@ -294,10 +304,12 @@ public class Ingame
                     case 90:
                     case 270:
                         if(m_MatrixPosX == 6)
-                            return true;
+                            return true;         
+                            break;
                     default:
                         if(m_MatrixPosX == 9)
-                            return true;
+                            return true;         
+                            break;
                 }
             }
             else if(m_CurrentPiece == "T")
@@ -306,16 +318,20 @@ public class Ingame
                 {
                     case 0:
                         if(m_MatrixPosX == 8)
-                            return true;
+                            return true;         
+                            break;
                     case 90:
                         if(m_MatrixPosX == 9)
-                            return true;
+                            return true;         
+                            break;
                     case 180:
                         if(m_MatrixPosX == 7)
-                            return true;
+                            return true;         
+                            break;
                     case 270:
                         if(m_MatrixPosX == 8)
-                            return true;
+                            return true;         
+                            break;
                 }
             }
             else if(m_CurrentPiece == "Pl")
@@ -324,16 +340,20 @@ public class Ingame
                 {
                     case 0:
                         if(m_MatrixPosX == 9)
-                            return true;
+                            return true;       
+                            break;
                     case 90:
                         if(m_MatrixPosX == 7)
                             return true;
+                            break;
                     case 180:
                         if(m_MatrixPosX == 8)
                             return true;
+                            break;
                     case 270:
                         if(m_MatrixPosX == 7)
                             return true;
+                            break;
                 }
             }
             else if(m_CurrentPiece == "Pr")
@@ -342,21 +362,25 @@ public class Ingame
                 {
                     case 0:
                         if(m_MatrixPosX == 8)
-                            return true;
+                            return true;         
+                            break;
                     case 90:
                         if(m_MatrixPosX == 9)
-                            return true;
+                            return true;         
+                            break;
                     case 180:
                         if(m_MatrixPosX == 8)
-                            return true;
+                            return true;         
+                            break;
                     case 270:
                         if(m_MatrixPosX == 7)
-                            return true;
+                            return true;         
+                            break;
                 }
             }
             else if(m_CurrentPiece == "Block")
             {
-                if(m_MatrixPosX == 0)
+                if(m_MatrixPosX == 9)
                     return true;
             }
         }
@@ -365,11 +389,14 @@ public class Ingame
     
     private int[] GetCurrentPieceLimit(String _direction)
     {
+        int [] tempPos = new int[1];
+        
         if(_direction == "Left")
         {
             if(m_CurrentPiece == "Quad")
             {
                 int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1};
+                t = temp;
                 return temp;
             }
             else if(m_CurrentPiece == "Zl")
@@ -379,11 +406,14 @@ public class Ingame
                     case 90:
                     case 270:
                         int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX+1, m_MatrixPosY-2};
-                        return temp;
+                        tempPos = temp;
+                        break;
                     default:
                         int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX-1, m_MatrixPosY-1};
-                        return temp1;
+                        tempPos = temp1;
+                        break;
                 }
+                return tempPos;
             }
             else if(m_CurrentPiece == "Zr")
             {
@@ -392,11 +422,14 @@ public class Ingame
                     case 90:
                     case 270:
                         int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX-1, m_MatrixPosY-1, m_MatrixPosX-1, m_MatrixPosY-2};
-                        return temp;
+                        tempPos = temp;
+                        break;
                     default:
                         int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1};
-                        return temp1;
+                        tempPos = temp1;
+                        break;
                 }
+                return tempPos;
             }
             else if(m_CurrentPiece == "Pr")
             {
@@ -404,17 +437,22 @@ public class Ingame
                 {
                     case 0:
                         int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
-                        return temp;
+                        tempPos = temp;
+                        break;
                     case 90:
                         int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX-2, m_MatrixPosY-1};
-                        return temp1;
+                        tempPos = temp1;
+                        break;
                     case 180:
                         int[] temp2 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1, m_MatrixPosX+1, m_MatrixPosY-2};
-                        return temp2;
+                        tempPos = temp2;
+                        break;
                     case 270:
                         int[] temp3 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1};
-                        return temp3;
+                        tempPos = temp3;
+                        break;
                 }
+                return tempPos;
             }
             else if(m_CurrentPiece == "Pl")
             {
@@ -422,17 +460,22 @@ public class Ingame
                 {
                     case 0:
                         int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX-1, m_MatrixPosY-2};
-                        return temp;
+                        tempPos = temp;
+                        break;
                     case 90:
                         int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+2, m_MatrixPosY-1};
-                        return temp1;
+                        tempPos = temp1;
+                        break;
                     case 180:
                         int[] temp2 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
-                        return temp2;
+                        tempPos = temp2;
+                        break;
                     case 270:
                         int[] temp3 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1};
-                        return temp3;
+                        tempPos = temp3;
+                        break;
                 }
+                return tempPos;
             }
             else if(m_CurrentPiece == "T")
             {
@@ -440,17 +483,22 @@ public class Ingame
                 {
                     case 0:
                         int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX-1, m_MatrixPosY-1};
-                        return temp;
+                        tempPos = temp;
+                        break;
                     case 90:
                         int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX-1, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
-                        return temp1;
+                        tempPos = temp1;
+                        break;
                     case 180:
                         int[] temp2 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1};
-                        return temp2;
+                        tempPos = temp2;
+                        break;
                     case 270:
                         int[] temp3 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
-                        return temp3;
+                        tempPos = temp3;
+                        break;
                 }
+                return tempPos;
             }
             else if(m_CurrentPiece == "Tower")
             {
@@ -459,11 +507,14 @@ public class Ingame
                     case 90:
                     case 270:
                         int[] temp = {m_MatrixPosX, m_MatrixPosY};
-                        return temp;
+                        tempPos = temp;
+                        break;
                     default:
                         int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2, m_MatrixPosX, m_MatrixPosY-3};
-                        return temp1;
+                        tempPos = temp1;
+                        break;
                 }
+                return tempPos;
             }
             else if(m_CurrentPiece == "Block")
             {
@@ -485,11 +536,14 @@ public class Ingame
                     case 90:
                     case 270:
                         int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1, m_MatrixPosX+1, m_MatrixPosY-2};
-                        return temp;
+                        tempPos = temp;
+                        break;
                     default:
                         int[] temp1 = {m_MatrixPosX+1, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1};
-                        return temp1;
+                        tempPos = temp1;
+                        break;
                 }
+                return tempPos;
             }
             else if(m_CurrentPiece == "Zr")
             {
@@ -498,11 +552,14 @@ public class Ingame
                     case 90:
                     case 270:
                         int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX-1, m_MatrixPosY-2};
-                        return temp;
+                        tempPos = temp;
+                        break;
                     default:
                         int[] temp1 = {m_MatrixPosX+1, m_MatrixPosY, m_MatrixPosX+2, m_MatrixPosY-1};
-                        return temp1;
+                        tempPos = temp1;
+                        break;
                 }
+                return tempPos;
             }
             else if(m_CurrentPiece == "Pr")
             {
@@ -510,17 +567,22 @@ public class Ingame
                 {
                     case 0:
                         int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX+1, m_MatrixPosY-2};
-                        return temp;
+                        tempPos = temp;
+                        break;
                     case 90:
                         int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1};
-                        return temp1;
+                        tempPos = temp1;
+                        break;
                     case 180:
                         int[] temp2 = {m_MatrixPosX+1, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1, m_MatrixPosX+1, m_MatrixPosY-2};
-                        return temp2;
+                        tempPos = temp2;
+                        break;
                     case 270:
                         int[] temp3 = {m_MatrixPosX+2, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1};
-                        return temp3;
+                        tempPos = temp3;
+                        break;
                 }
+                return tempPos;
             }
             else if(m_CurrentPiece == "Pl")
             {
@@ -528,17 +590,22 @@ public class Ingame
                 {
                     case 0:
                         int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
-                        return temp;
+                        tempPos = temp;
+                        break;
                     case 90:
                         int[] temp1 = {m_MatrixPosX+2, m_MatrixPosY, m_MatrixPosX+2, m_MatrixPosY-1};
-                        return temp1;
+                        tempPos = temp1;
+                        break;
                     case 180:
                         int[] temp2 = {m_MatrixPosX+1, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
-                        return temp2;
+                        tempPos = temp2;
+                        break;
                     case 270:
                         int[] temp3 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+2, m_MatrixPosY-1};
-                        return temp3;
+                        tempPos = temp3;
+                        break;
                 }
+                return tempPos;
             }
             else if(m_CurrentPiece == "T")
             {
@@ -546,17 +613,22 @@ public class Ingame
                 {
                     case 0:
                         int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1};
-                        return temp;
+                        tempPos = temp;
+                        break;
                     case 90:
                         int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
-                        return temp1;
+                        tempPos = temp1;
+                        break;
                     case 180:
                         int[] temp2 = {m_MatrixPosX+2, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1};
-                        return temp2;
+                        tempPos = temp2;
+                        break;
                     case 270:
                         int[] temp3 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
-                        return temp3;
+                        tempPos = temp3;
+                        break;
                 }
+                return tempPos;
             }
             else if(m_CurrentPiece == "Tower")
             {
@@ -565,11 +637,14 @@ public class Ingame
                     case 90:
                     case 270:
                         int[] temp = {m_MatrixPosX+3, m_MatrixPosY};
-                        return temp;
+                        tempPos = temp;
+                        break;
                     default:
                         int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2, m_MatrixPosX, m_MatrixPosY-3};
-                        return temp1;
+                        tempPos = temp1;
+                        break;
                 }
+                return tempPos;
             }
             else if(m_CurrentPiece == "Block")
             {
@@ -586,7 +661,7 @@ public class Ingame
         int y = 1;
         int amountPieceToCheck = (_positions.length / 2);
         
-        if(_direction == "Left")
+        if(_direction == "Left" && !IsStageLimit("Left"))
         {
             for(int i = 0; i < amountPieceToCheck; i++)
             {
@@ -600,7 +675,7 @@ public class Ingame
             }
             return true;
         }
-        else
+        else if(_direction == "Right" && !IsStageLimit("Right"))
         {
             for(int i = 0; i < amountPieceToCheck; i++)
             {
@@ -614,35 +689,9 @@ public class Ingame
             }
             return true;
         }
+        return false;
     }
-    
-    /*
-    private boolean LeftCanMove()
-    {
-        if( m_MatrixPosX > (m_Piece.GetPieceLimit(m_CurrentPiece)[1] - 1))
-        {
-            if(m_Grid[m_MatrixPosX - m_Piece.GetPieceLimit(m_CurrentPiece)[1]][m_MatrixPosY] == 0)
-                return true;
-            else
-                return false;
-        }
-        else
-            return false;
-    }
-    
-    private boolean RightCanMove()
-    {
-        if( m_MatrixPosX < (m_Grid.length - m_Piece.GetPieceLimit(m_CurrentPiece)[0])) //tava 19
-        {
-            if(m_Grid[m_MatrixPosX + m_Piece.GetPieceLimit(m_CurrentPiece)[0]][m_MatrixPosY] == 0)
-                return true;
-            else
-                return false;
-        }
-        else
-            return false;
-    }
-    */
+   
     public void NormalDropPiece()
     {
         m_FastDropPiece = false;
@@ -655,7 +704,7 @@ public class Ingame
     
     public void Execute()
     {
-        m_CurrentPiece = "Tower"; //TEST
+        m_CurrentPiece = "Quad"; //TEST
         
         m_Piece.DrawPieceInBoard(m_Grid);
         
@@ -665,13 +714,17 @@ public class Ingame
     
     public String tttttt()
     {
-        return "Matr: " + m_MatrixPosX + "  PosPeç: " + m_PosX;
+        if(t.length > 1)
+            return "Matr1: " + t[0] + "  Matr2: " + t[1] + "   Matr3: " + t[2] + "  Matr4: " + t[3];
+        else
+            return "";
     }
     
     private void DropPiece()
     {
         MakePoints();
         UpdatePiece();
+        
         UpdateNextPiece();
         UpdateSpeed();
     }
@@ -689,13 +742,14 @@ public class Ingame
         
         if(!m_FastDropPiece)
         {
-            if(m_UpdateTimer >= 5f)
+            if(m_UpdateTimer >= 15f)
             {
+                CheckBoard();
                 if( m_PosY < 50)
                     m_MatrixPosY++;
 
                 m_PosY -= 5;
-                CheckBoard();
+                
                 m_UpdateTimer = 0;
             }
         }
@@ -703,11 +757,11 @@ public class Ingame
         {
             if(m_UpdateTimer >= 0.5f)
             {
+                CheckBoard();
                 if( m_PosY < 50)
                     m_MatrixPosY++;
 
                 m_PosY -= 5;
-                CheckBoard();
                 m_UpdateTimer = 0;
             }
         }
