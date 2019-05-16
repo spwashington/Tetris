@@ -29,6 +29,8 @@ public class Ingame
     private float m_UpdateTimer;
     private boolean m_FastDropPiece;
     private float m_DropSpeed;
+    private boolean m_MoveRight;
+    private boolean m_MoveLeft;
     
     private int[] t  = new int[1];
     private String teste = "";
@@ -118,22 +120,34 @@ public class Ingame
     
     public void MoveLeft()
     {
-        if(CanMove("Left", GetCurrentPieceLimit("Left")))
+        if(m_MoveLeft)
         {
             m_MatrixPosX--;
             m_PosX -= 5;
         }
+        /*
+        if(CanMove("Left", GetCurrentPieceLimit("Left")))
+        {
+            
+        }*/
     }
     
     public void MoveRight()
     {
-        if(CanMove("Right", GetCurrentPieceLimit("Right")))
+        if(m_MoveRight)
         {
             m_MatrixPosX++;
             m_PosX += 5;
         }
+        /*
+        if(CanMove("Right", GetCurrentPieceLimit("Right")))
+        {
+            m_MatrixPosX++;
+            m_PosX += 5;
+        }*/
     }
     
+    /*
     private boolean IsStageLimit(String _direction)
     {
         if(_direction == "Left")
@@ -385,7 +399,7 @@ public class Ingame
             }
         }
         return false;
-    }
+    }*/
     
     private int[] GetCurrentPieceLimit(String _direction)
     {
@@ -704,13 +718,689 @@ public class Ingame
     
     public void Execute()
     {
-        m_CurrentPiece = "Quad"; //TEST
+        m_CurrentPiece = "Tower"; //TEST
         
         m_Piece.DrawPieceInBoard(m_Grid);
         
         if(!IsGameOver())
+        {
             DropPiece(); 
+            //CheckMoveLeft();
+            Move();
+        }
     }
+    
+    public boolean ttt()
+    {
+        return m_MoveLeft;
+    }
+    
+    public boolean tttr()
+    {
+        return m_MoveRight;
+    }
+    
+    private void Move()
+    {
+        m_MoveLeft = true;
+        m_MoveRight = true;
+        
+        switch(m_CurrentPiece)
+        {
+            case "Zr":
+                if(!IsStageLimit("Left"))
+                {
+                    if(m_Piece.GetRotateValue() == 0 || m_Piece.GetRotateValue() == 180)
+                    {
+                        if(m_MatrixPosX > 0)
+                        {
+                            if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX][m_MatrixPosY-1] > 0)
+                                m_MoveLeft = false;
+                        }
+                        else
+                            m_MoveLeft = false;
+                    }
+                    else if(m_Piece.GetRotateValue() == 90 || m_Piece.GetRotateValue() == 270)
+                    {
+                        if(m_MatrixPosX > 1)
+                        {
+                            if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX-2][m_MatrixPosY-1] > 0 || m_Grid[m_MatrixPosX-2][m_MatrixPosY-2] > 0)
+                                m_MoveLeft = false;
+                        }
+                        else
+                            m_MoveLeft = false;
+                    }
+                }
+                else
+                    m_MoveLeft = false;
+                
+                if(!IsStageLimit("Right"))
+                {
+                    if(m_Piece.GetRotateValue() == 0 || m_Piece.GetRotateValue() == 180)
+                    {
+                        if(m_MatrixPosX < 7)
+                        {
+                            if(m_Grid[m_MatrixPosX+2][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX+3][m_MatrixPosY-1] > 0)
+                                m_MoveRight = false;
+                        }
+                        else
+                            m_MoveRight = false;
+                    }
+                    else if(m_Piece.GetRotateValue() == 90 || m_Piece.GetRotateValue() == 270)
+                    {
+                        if(m_MatrixPosX < 9)
+                        {
+                            if(m_Grid[m_MatrixPosX+1][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] > 0 || m_Grid[m_MatrixPosX][m_MatrixPosY-2] > 0)
+                                m_MoveRight = false;
+                        }
+                        else
+                            m_MoveRight = false;
+                    }
+                } 
+                else
+                    m_MoveRight = false;
+            break;
+            
+            case "Tower":
+                if(!IsStageLimit("Left"))
+                {
+                    if(m_Piece.GetRotateValue() == 0 || m_Piece.GetRotateValue() == 180)
+                    {
+                        if(m_MatrixPosX > 0)
+                        {
+                            if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-3] > 0)
+                                m_MoveLeft = false;
+                        }
+                        else
+                            m_MoveLeft = false;
+                    }
+                    else if(m_Piece.GetRotateValue() == 90 || m_Piece.GetRotateValue() == 270)
+                    {
+                        if(m_MatrixPosX > 0)
+                        {
+                            if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0)
+                                m_MoveLeft = false;
+                        }
+                        else
+                            m_MoveLeft = false;
+                    }
+                }
+                else
+                    m_MoveLeft = false;
+                
+                if(!IsStageLimit("Right"))
+                {
+                    if(m_Piece.GetRotateValue() == 0 || m_Piece.GetRotateValue() == 180)
+                    {
+                        if(m_MatrixPosX < 9)
+                        {
+                            if(m_Grid[m_MatrixPosX+1][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] > 0 || m_Grid[m_MatrixPosX+1][m_MatrixPosY-2] > 0 || m_Grid[m_MatrixPosX+1][m_MatrixPosY-3] > 0)
+                                m_MoveRight = false;
+                        }
+                        else
+                            m_MoveRight = false;
+                    }
+                    else if(m_Piece.GetRotateValue() == 90 || m_Piece.GetRotateValue() == 270)
+                    {
+                        if(m_MatrixPosX < 9)
+                        {
+                            if(m_Grid[m_MatrixPosX+1][m_MatrixPosY] > 0)
+                                m_MoveRight = false;
+                        }
+                        else
+                            m_MoveRight = false;
+                    }
+                } 
+                else
+                    m_MoveRight = false;
+            break;
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    private boolean IsStageLimit(String _direction)
+    {
+        boolean temp = false;
+        
+        if(_direction == "Left")
+        {
+            if(m_CurrentPiece == "Quad")
+                if(m_MatrixPosX == 0)
+                    temp = true;
+            else if(m_CurrentPiece == "Zl")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 90:
+                    case 270:
+                        if(m_MatrixPosX == 0)
+                            temp = true;
+                    break;
+                    default:
+                        if(m_MatrixPosX == 1)
+                            temp = true;
+                            break;
+                }
+            }
+            else if(m_CurrentPiece == "Zr")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 90:
+                    case 270:
+                        if(m_MatrixPosX == 1)
+                            temp = true;
+                            break;
+                    default:
+                        if(m_MatrixPosX == 0)
+                            temp = true;
+                            break;
+                }
+            }
+            else if(m_CurrentPiece == "Tower")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 90:
+                    case 270:
+                        if(m_MatrixPosX == 0)
+                            temp = true;
+                            break;
+                    default:
+                        if(m_MatrixPosX == 0)
+                            temp = true;
+                            break;
+                }
+            }
+            else if(m_CurrentPiece == "T")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 0:
+                        if(m_MatrixPosX == 1)
+                            temp = true;
+                            break;
+                    case 90:
+                        if(m_MatrixPosX == 1)
+                            temp = true;
+                            break;
+                    case 180:
+                        if(m_MatrixPosX == 0)
+                            temp = true;
+                            break;
+                    case 270:
+                        if(m_MatrixPosX == 0)
+                            temp = true;
+                            break;
+                }
+            }
+            else if(m_CurrentPiece == "Pl")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 0:
+                        if(m_MatrixPosX == 1)
+                            temp = true;
+                            break;
+                    case 90:
+                        if(m_MatrixPosX == 0)
+                            temp = true;
+                            break;
+                    case 180:
+                        if(m_MatrixPosX == 0)
+                            temp = true;
+                            break;
+                    case 270:
+                        if(m_MatrixPosX == 0)
+                            temp = true;
+                            break;
+                }
+            }
+            else if(m_CurrentPiece == "Pr")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 0:
+                        if(m_MatrixPosX == 0)
+                            temp = true;                            
+                            break;
+                    case 90:
+                        if(m_MatrixPosX == 2)
+                            temp = true;                            
+                            break;
+                    case 180:
+                        if(m_MatrixPosX == 0)
+                            temp = true;                                
+                            break;
+                    case 270:
+                        if(m_MatrixPosX == 0)
+                            temp = true;                            
+                            break;
+                }
+            }
+            else if(m_CurrentPiece == "Block")
+            {
+                if(m_MatrixPosX == 0)
+                    temp = true;
+            }   
+        }   
+        else
+        {
+            if(m_CurrentPiece == "Quad")
+            {
+                if(m_MatrixPosX == 8)
+                    temp = true;
+            }
+            else if(m_CurrentPiece == "Zl")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 90:
+                    case 270:
+                        if(m_MatrixPosX == 8)
+                            temp = true;         
+                            break;
+                    default:
+                        if(m_MatrixPosX == 8)
+                            temp = true;         
+                            break;
+                }
+            }
+            else if(m_CurrentPiece == "Zr")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 90:
+                    case 270:
+                        if(m_MatrixPosX == 9)
+                            temp = true;         
+                            break;
+                    default:
+                        if(m_MatrixPosX == 7)
+                            temp = true;         
+                            break;
+                }
+            }
+            else if(m_CurrentPiece == "Tower")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 90:
+                    case 270:
+                        if(m_MatrixPosX == 6)
+                            temp = true;         
+                            break;
+                    default:
+                        if(m_MatrixPosX == 9)
+                            temp = true;         
+                            break;
+                }
+            }
+            else if(m_CurrentPiece == "T")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 0:
+                        if(m_MatrixPosX == 8)
+                            temp = true;         
+                            break;
+                    case 90:
+                        if(m_MatrixPosX == 9)
+                            temp = true;         
+                            break;
+                    case 180:
+                        if(m_MatrixPosX == 7)
+                            temp = true;         
+                            break;
+                    case 270:
+                        if(m_MatrixPosX == 8)
+                            temp = true;         
+                            break;
+                }
+            }
+            else if(m_CurrentPiece == "Pl")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 0:
+                        if(m_MatrixPosX == 9)
+                            temp = true;       
+                            break;
+                    case 90:
+                        if(m_MatrixPosX == 7)
+                            temp = true;
+                            break;
+                    case 180:
+                        if(m_MatrixPosX == 8)
+                            temp = true;
+                            break;
+                    case 270:
+                        if(m_MatrixPosX == 7)
+                            temp = true;
+                            break;
+                }
+            }
+            else if(m_CurrentPiece == "Pr")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 0:
+                        if(m_MatrixPosX == 8)
+                            temp = true;         
+                            break;
+                    case 90:
+                        if(m_MatrixPosX == 9)
+                            temp = true;         
+                            break;
+                    case 180:
+                        if(m_MatrixPosX == 8)
+                            temp = true;         
+                            break;
+                    case 270:
+                        if(m_MatrixPosX == 7)
+                            temp = true;         
+                            break;
+                }
+            }
+            else if(m_CurrentPiece == "Block")
+            {
+                if(m_MatrixPosX == 9)
+                    temp = true;
+            }
+        }
+        
+        return temp;
+    }
+    
+    private void CheckMoveLeft()
+    {
+        if(!IsStageLimit("Left"))
+        {
+            switch(m_CurrentPiece)
+            {
+                case "Quad":
+                    if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] > 0)
+                        m_MoveLeft = false;
+                    else
+                        m_MoveLeft = true;
+                    break;
+                case "Zl":
+                    if(m_Piece.GetRotateValue() == 90 && m_MatrixPosX > 0 || m_Piece.GetRotateValue() == 270 && m_MatrixPosX > 0)
+                    {
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] > 0 || m_Grid[(m_MatrixPosX+1) - 1][m_MatrixPosY-2] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true; 
+                    }
+                    else if(m_Piece.GetRotateValue() == 0 && m_MatrixPosX > 1 || m_Piece.GetRotateValue() == 180 && m_MatrixPosX > 1)
+                    {
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[(m_MatrixPosX-1) - 1][m_MatrixPosY-1] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true;
+                    }
+                    else
+                        m_MoveLeft = false;
+                    break;
+                case "Zr":
+                    if(m_Piece.GetRotateValue() == 0 && m_MatrixPosX > 1 || m_Piece.GetRotateValue() == 180 && m_MatrixPosX > 1)
+                    {
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[(m_MatrixPosX+1) - 1][m_MatrixPosY-1] > 0)
+                            m_MoveLeft = false;
+                        else 
+                            m_MoveLeft = true;
+                    }
+                    else if(m_Piece.GetRotateValue() == 90 && m_MatrixPosX > 2 || m_Piece.GetRotateValue() == 270 && m_MatrixPosX > 2)
+                    {
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[(m_MatrixPosX-1) - 1][m_MatrixPosY-1] > 0 || m_Grid[(m_MatrixPosX-1) - 1][m_MatrixPosY-2] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true;
+                    }
+                    else
+                        m_MoveLeft = false;
+                case "Pr":
+                    if(m_Piece.GetRotateValue() == 0)
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true;
+                    else if(m_Piece.GetRotateValue() == 90)
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[(m_MatrixPosX-2) - 1][m_MatrixPosY-1] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true;
+                    else if(m_Piece.GetRotateValue() == 180)
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[(m_MatrixPosX+1) - 1][m_MatrixPosY-1] > 0 || m_Grid[(m_MatrixPosX+1) - 1][m_MatrixPosY-2] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true;
+                    else if(m_Piece.GetRotateValue() == 270)
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true;
+                    break;
+                case "Pl":
+                    if(m_Piece.GetRotateValue() == 0)
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] > 0 || m_Grid[(m_MatrixPosX-1) - 1][m_MatrixPosY-2] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true;
+                    else if(m_Piece.GetRotateValue() == 90)
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[(m_MatrixPosX+2) - 1][m_MatrixPosY-1] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true;
+                    else if(m_Piece.GetRotateValue() == 180)
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true;
+                    else if(m_Piece.GetRotateValue() == 270)
+                            if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX][m_MatrixPosY-1] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true;
+                    break;
+                case "T":
+                    if(m_Piece.GetRotateValue() == 0)
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[(m_MatrixPosX-1) -1][m_MatrixPosY-1] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true;
+                    else if(m_Piece.GetRotateValue() == 90)
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[(m_MatrixPosX-1)-1][m_MatrixPosY-1] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true;
+                    else if(m_Piece.GetRotateValue() == 180)
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] >0 || m_Grid[(m_MatrixPosX+1)-1][m_MatrixPosY-1] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true;
+                    else if(m_Piece.GetRotateValue() == 270)
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true;
+                    break;
+                case "Tower":
+                    if(m_Piece.GetRotateValue() == 0 || m_Piece.GetRotateValue() == 180)
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-2] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-3] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true;
+                    else if(m_Piece.GetRotateValue() == 90 || m_Piece.GetRotateValue() == 270)
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0)
+                            m_MoveLeft = false;
+                        else
+                            m_MoveLeft = true;
+                    break;
+                case "Block":
+                    if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0)
+                        m_MoveLeft = false;
+                    else
+                        m_MoveLeft = true;
+                    break;
+            }
+        }
+        else
+            m_MoveLeft = false;
+    }
+    
+    /* TO DO
+    private void CheckMoveRight()
+    {
+        int [] tempPos;
+        else
+        {
+            if(m_CurrentPiece == "Quad")
+            {
+                int[] temp = {m_MatrixPosX+1, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1};
+                return temp;
+            }
+            else if(m_CurrentPiece == "Zl")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 90:
+                    case 270:
+                        int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1, m_MatrixPosX+1, m_MatrixPosY-2};
+                        tempPos = temp;
+                        break;
+                    default:
+                        int[] temp1 = {m_MatrixPosX+1, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1};
+                        tempPos = temp1;
+                        break;
+                }
+                return tempPos;
+            }
+            else if(m_CurrentPiece == "Zr")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 90:
+                    case 270:
+                        int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX-1, m_MatrixPosY-2};
+                        tempPos = temp;
+                        break;
+                    default:
+                        int[] temp1 = {m_MatrixPosX+1, m_MatrixPosY, m_MatrixPosX+2, m_MatrixPosY-1};
+                        tempPos = temp1;
+                        break;
+                }
+                return tempPos;
+            }
+            else if(m_CurrentPiece == "Pr")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 0:
+                        int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX+1, m_MatrixPosY-2};
+                        tempPos = temp;
+                        break;
+                    case 90:
+                        int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1};
+                        tempPos = temp1;
+                        break;
+                    case 180:
+                        int[] temp2 = {m_MatrixPosX+1, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1, m_MatrixPosX+1, m_MatrixPosY-2};
+                        tempPos = temp2;
+                        break;
+                    case 270:
+                        int[] temp3 = {m_MatrixPosX+2, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1};
+                        tempPos = temp3;
+                        break;
+                }
+                return tempPos;
+            }
+            else if(m_CurrentPiece == "Pl")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 0:
+                        int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
+                        tempPos = temp;
+                        break;
+                    case 90:
+                        int[] temp1 = {m_MatrixPosX+2, m_MatrixPosY, m_MatrixPosX+2, m_MatrixPosY-1};
+                        tempPos = temp1;
+                        break;
+                    case 180:
+                        int[] temp2 = {m_MatrixPosX+1, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
+                        tempPos = temp2;
+                        break;
+                    case 270:
+                        int[] temp3 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+2, m_MatrixPosY-1};
+                        tempPos = temp3;
+                        break;
+                }
+                return tempPos;
+            }
+            else if(m_CurrentPiece == "T")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 0:
+                        int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1};
+                        tempPos = temp;
+                        break;
+                    case 90:
+                        int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
+                        tempPos = temp1;
+                        break;
+                    case 180:
+                        int[] temp2 = {m_MatrixPosX+2, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1};
+                        tempPos = temp2;
+                        break;
+                    case 270:
+                        int[] temp3 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
+                        tempPos = temp3;
+                        break;
+                }
+                return tempPos;
+            }
+            else if(m_CurrentPiece == "Tower")
+            {
+                switch(m_Piece.GetRotateValue())
+                {
+                    case 90:
+                    case 270:
+                        int[] temp = {m_MatrixPosX+3, m_MatrixPosY};
+                        tempPos = temp;
+                        break;
+                    default:
+                        int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2, m_MatrixPosX, m_MatrixPosY-3};
+                        tempPos = temp1;
+                        break;
+                }
+                return tempPos;
+            }
+            else if(m_CurrentPiece == "Block")
+            {
+                int[] temp = {m_MatrixPosX, m_MatrixPosY};
+                return temp;
+            }
+        }
+        return null;
+    }
+    */
     
     public String tttttt()
     {
@@ -1280,7 +1970,36 @@ public class Ingame
                         m_PosX = 10;
                     }
                 }
-                break;
+            break;
+            
+            case "Zr":
+                if(m_Piece.GetRotateValue() == 0 || m_Piece.GetRotateValue() == 180)
+                {
+                    if(m_MatrixPosX > 6)
+                    {
+                        m_MatrixPosX = 7;
+                        m_PosX = 15;
+                    }
+                    else if(m_MatrixPosX < 2)
+                    {
+                        m_MatrixPosX = 0;
+                        m_PosX = -20;
+                    }
+                }
+                else if(m_Piece.GetRotateValue() == 90 || m_Piece.GetRotateValue() == 270)
+                {
+                    if(m_MatrixPosX < 9 && m_MatrixPosX > 6)
+                    {
+                        m_MatrixPosX = 9;
+                        m_PosX = 25;
+                    }
+                    else if(m_MatrixPosX < 2)
+                    {
+                        m_MatrixPosX = 1;
+                        m_PosX = -15;
+                    }
+                }
+            break;
         }
     }
     

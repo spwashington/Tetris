@@ -12,8 +12,8 @@ import com.jogamp.opengl.util.FPSAnimator;
 public class Render 
 {
     private static GLWindow m_Windows = null;
-    private static int m_ScreenWidth = 480;
-    private static int m_ScreenHeight = 800;
+    private static int m_ScreenWidth = 640;
+    private static int m_ScreenHeight = 480;
     
     public static void main(String[] args) 
     {  
@@ -23,7 +23,7 @@ public class Render
         
         m_Windows = GLWindow.create(m_Capabilities);
         m_Windows.setSize(m_ScreenWidth, m_ScreenHeight);
-        m_Windows.setResizable(false);
+        m_Windows.setResizable(true);
         
         
         Game m_GameScreen = new Game();
@@ -44,7 +44,7 @@ public class Render
             }
         });   
         
-        m_Windows.setFullscreen(true);
+        m_Windows.setFullscreen(false);
         m_Windows.setVisible(true);
     } 
 }
