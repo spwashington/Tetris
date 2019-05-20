@@ -1,3 +1,4 @@
+import com.jogamp.newt.Screen;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.opengl.GL2;
@@ -6,6 +7,7 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.gl2.GLUT;
 import java.awt.Color;
+import java.awt.Window;
 
 /**
  * @author Washington O. da Silva
@@ -85,6 +87,7 @@ public class Game implements GLEventListener, KeyListener
         
         m_Menu.CreateText(-5, -70, "<<<< " + m_Game.ttt(), Color.white, 8);
         m_Menu.CreateText(-5, -90, ">>>> " + m_Game.tttr(), Color.white, 8);
+        m_Menu.CreateText(-5, -80, m_Game.rrrrrrr(), Color.white, 8);
         
         if(m_Game.IsGameOver())
         {
@@ -112,6 +115,12 @@ public class Game implements GLEventListener, KeyListener
         GL2 m_GL2 = _drawable.getGL().getGL2();        
         m_GL2.glMatrixMode(GL2.GL_PROJECTION);      
         m_GL2.glLoadIdentity();
+        
+        /*
+        float aspect = _width / _height;
+        m_GL2.glViewport(0, 0, _width, _height);
+        m_GL2.glOrtho(-100.0 * aspect, 100.0 * aspect, -100.0, 100.0, -100.0, 100.0);
+        */
         m_GL2.glOrtho(-100,100,-100,100,-100,100);
         m_GL2.glMatrixMode(GL2.GL_MODELVIEW);
     }
