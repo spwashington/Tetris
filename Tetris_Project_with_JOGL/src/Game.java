@@ -85,10 +85,6 @@ public class Game implements GLEventListener, KeyListener
         m_Menu.CreateText(35, 40, Integer.toString(m_Game.GetPoints()), Color.white, 8);
         m_Menu.CreateText(40, -5, "Next Piece", Color.white, 7);
         
-        m_Menu.CreateText(-5, -70, "<<<< " + m_Game.ttt(), Color.white, 8);
-        m_Menu.CreateText(-5, -90, ">>>> " + m_Game.tttr(), Color.white, 8);
-        m_Menu.CreateText(-5, -80, m_Game.rrrrrrr(), Color.white, 8);
-        
         if(m_Game.IsGameOver())
         {
             m_Menu.CreateText(35, -20, "GAME OVER", Color.red, 8);
@@ -115,12 +111,6 @@ public class Game implements GLEventListener, KeyListener
         GL2 m_GL2 = _drawable.getGL().getGL2();        
         m_GL2.glMatrixMode(GL2.GL_PROJECTION);      
         m_GL2.glLoadIdentity();
-        
-        /*
-        float aspect = _width / _height;
-        m_GL2.glViewport(0, 0, _width, _height);
-        m_GL2.glOrtho(-100.0 * aspect, 100.0 * aspect, -100.0, 100.0, -100.0, 100.0);
-        */
         m_GL2.glOrtho(-100,100,-100,100,-100,100);
         m_GL2.glMatrixMode(GL2.GL_MODELVIEW);
     }
@@ -221,6 +211,4 @@ public class Game implements GLEventListener, KeyListener
                 break;
         }
     }
-
-    
 }
