@@ -39,11 +39,6 @@ public class Piece
             m_PieceRotate += 90;
     }
     
-    public String ttttt()
-    {
-        return "" + m_PieceRotate;
-    }
-    
     public int GetRotateValue()
     {
         return m_PieceRotate;

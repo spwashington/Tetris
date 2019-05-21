@@ -60,9 +60,9 @@ public class Ingame
     {
         m_Points = 0;
         m_PosX = 5;
-        m_PosY = 30; //Lugar a cima, o valido é 45
+        m_PosY = 35; //Lugar a cima, o valido é 45
         m_MatrixPosX = 5;
-        m_MatrixPosY = 4;
+        m_MatrixPosY = 3;
         m_CurrentPiece = NextPiece();
         m_NextPiece = NextPiece();
         m_UpdateTimer = 0;
@@ -916,6 +916,12 @@ public class Ingame
                     m_MoveRight = false;
             break;
         }
+        
+        if(IsGameOver())
+        {
+            m_MoveLeft = false;
+            m_MoveRight = false;
+        }
         //CheckBoard();
     }
     
@@ -1419,7 +1425,6 @@ public class Ingame
     {
         MakePoints();
         UpdatePiece();
-        
         UpdateNextPiece();
         UpdateSpeed();
     }
@@ -2004,15 +2009,26 @@ public class Ingame
     {
         m_Piece.RestartRotate();
         m_PosX = 5;
-        m_PosY = 30;
+        m_PosY = 35;
         m_MatrixPosX = 5;
-        m_MatrixPosY = 4;
+        m_MatrixPosY = 3;
         m_CurrentPiece = m_NextPiece;
-        m_NextPiece = NextPiece();
+        m_NextPiece = NextPiece(); 
     }
     
     public boolean IsGameOver()
     {
+        if(m_Grid[m_MatrixPosX][m_MatrixPosY] > 0)
+        {
+            //m_Piece.DropPiece(m_PosX, m_PosY, m_CurrentPiece);
+            m_Grid[m_MatrixPosX][0] = 1;
+            m_Grid[m_MatrixPosX][1] = 1;
+            m_Grid[m_MatrixPosX][2] = 1;
+            m_Grid[m_MatrixPosX][3] = 1;
+            m_Grid[m_MatrixPosX][4] = 1;
+            return true;
+        }
+        
         if(m_MatrixPosY == 0)
         {
             if(m_Grid[m_MatrixPosX][m_MatrixPosY] > 0)
