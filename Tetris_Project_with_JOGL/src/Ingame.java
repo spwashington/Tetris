@@ -17,6 +17,7 @@ public class Ingame
     private GL2 m_GL2;
     private GLUT m_Glut;
     private int m_Points;
+    private int m_Level;
     private int m_HighScore;
     private int m_Grid [][];
     private int m_MatrixPosX;
@@ -27,6 +28,7 @@ public class Ingame
     private String m_CurrentPiece;
     private Piece m_Piece;
     private float m_UpdateTimer;
+    private float m_PieceSpeed;
     private boolean m_FastDropPiece;
     private float m_DropSpeed;
     private boolean m_MoveRight;
@@ -45,11 +47,13 @@ public class Ingame
         m_PosY = 30; //Lugar a cima, o valido é 45
         m_Grid = new int[10][20];
         m_MatrixPosX = 5;
+        m_Level = 1;
         m_MatrixPosY = 4;
         m_CurrentPiece = NextPiece();
         m_NextPiece = NextPiece();
         m_Piece = new Piece(_openGL2, m_NextPiece);
         m_UpdateTimer = 0;
+        m_PieceSpeed = 10f;
         m_FastDropPiece = false;
         m_DropSpeed = 5f;
         
@@ -137,311 +141,6 @@ public class Ingame
         }
     }
     
-    private int[] GetCurrentPieceLimit(String _direction)
-    {
-        int [] tempPos = new int[1];
-        
-        if(_direction == "Left")
-        {
-            if(m_CurrentPiece == "Quad")
-            {
-                int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1};
-                t = temp;
-                return temp;
-            }
-            else if(m_CurrentPiece == "Zl")
-            {
-                switch(m_Piece.GetRotateValue())
-                {
-                    case 90:
-                    case 270:
-                        int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX+1, m_MatrixPosY-2};
-                        tempPos = temp;
-                        break;
-                    default:
-                        int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX-1, m_MatrixPosY-1};
-                        tempPos = temp1;
-                        break;
-                }
-                return tempPos;
-            }
-            else if(m_CurrentPiece == "Zr")
-            {
-                switch(m_Piece.GetRotateValue())
-                {
-                    case 90:
-                    case 270:
-                        int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX-1, m_MatrixPosY-1, m_MatrixPosX-1, m_MatrixPosY-2};
-                        tempPos = temp;
-                        break;
-                    default:
-                        int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1};
-                        tempPos = temp1;
-                        break;
-                }
-                return tempPos;
-            }
-            else if(m_CurrentPiece == "Pr")
-            {
-                switch(m_Piece.GetRotateValue())
-                {
-                    case 0:
-                        int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
-                        tempPos = temp;
-                        break;
-                    case 90:
-                        int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX-2, m_MatrixPosY-1};
-                        tempPos = temp1;
-                        break;
-                    case 180:
-                        int[] temp2 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1, m_MatrixPosX+1, m_MatrixPosY-2};
-                        tempPos = temp2;
-                        break;
-                    case 270:
-                        int[] temp3 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1};
-                        tempPos = temp3;
-                        break;
-                }
-                return tempPos;
-            }
-            else if(m_CurrentPiece == "Pl")
-            {
-                switch(m_Piece.GetRotateValue())
-                {
-                    case 0:
-                        int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX-1, m_MatrixPosY-2};
-                        tempPos = temp;
-                        break;
-                    case 90:
-                        int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+2, m_MatrixPosY-1};
-                        tempPos = temp1;
-                        break;
-                    case 180:
-                        int[] temp2 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
-                        tempPos = temp2;
-                        break;
-                    case 270:
-                        int[] temp3 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1};
-                        tempPos = temp3;
-                        break;
-                }
-                return tempPos;
-            }
-            else if(m_CurrentPiece == "T")
-            {
-                switch(m_Piece.GetRotateValue())
-                {
-                    case 0:
-                        int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX-1, m_MatrixPosY-1};
-                        tempPos = temp;
-                        break;
-                    case 90:
-                        int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX-1, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
-                        tempPos = temp1;
-                        break;
-                    case 180:
-                        int[] temp2 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1};
-                        tempPos = temp2;
-                        break;
-                    case 270:
-                        int[] temp3 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
-                        tempPos = temp3;
-                        break;
-                }
-                return tempPos;
-            }
-            else if(m_CurrentPiece == "Tower")
-            {
-                switch(m_Piece.GetRotateValue())
-                {
-                    case 90:
-                    case 270:
-                        int[] temp = {m_MatrixPosX, m_MatrixPosY};
-                        tempPos = temp;
-                        break;
-                    default:
-                        int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2, m_MatrixPosX, m_MatrixPosY-3};
-                        tempPos = temp1;
-                        break;
-                }
-                return tempPos;
-            }
-            else if(m_CurrentPiece == "Block")
-            {
-                int[] temp = {m_MatrixPosX, m_MatrixPosY};
-                return temp;
-            }
-        }
-        else
-        {
-            if(m_CurrentPiece == "Quad")
-            {
-                int[] temp = {m_MatrixPosX+1, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1};
-                return temp;
-            }
-            else if(m_CurrentPiece == "Zl")
-            {
-                switch(m_Piece.GetRotateValue())
-                {
-                    case 90:
-                    case 270:
-                        int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1, m_MatrixPosX+1, m_MatrixPosY-2};
-                        tempPos = temp;
-                        break;
-                    default:
-                        int[] temp1 = {m_MatrixPosX+1, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1};
-                        tempPos = temp1;
-                        break;
-                }
-                return tempPos;
-            }
-            else if(m_CurrentPiece == "Zr")
-            {
-                switch(m_Piece.GetRotateValue())
-                {
-                    case 90:
-                    case 270:
-                        int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX-1, m_MatrixPosY-2};
-                        tempPos = temp;
-                        break;
-                    default:
-                        int[] temp1 = {m_MatrixPosX+1, m_MatrixPosY, m_MatrixPosX+2, m_MatrixPosY-1};
-                        tempPos = temp1;
-                        break;
-                }
-                return tempPos;
-            }
-            else if(m_CurrentPiece == "Pr")
-            {
-                switch(m_Piece.GetRotateValue())
-                {
-                    case 0:
-                        int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX+1, m_MatrixPosY-2};
-                        tempPos = temp;
-                        break;
-                    case 90:
-                        int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1};
-                        tempPos = temp1;
-                        break;
-                    case 180:
-                        int[] temp2 = {m_MatrixPosX+1, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1, m_MatrixPosX+1, m_MatrixPosY-2};
-                        tempPos = temp2;
-                        break;
-                    case 270:
-                        int[] temp3 = {m_MatrixPosX+2, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1};
-                        tempPos = temp3;
-                        break;
-                }
-                return tempPos;
-            }
-            else if(m_CurrentPiece == "Pl")
-            {
-                switch(m_Piece.GetRotateValue())
-                {
-                    case 0:
-                        int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
-                        tempPos = temp;
-                        break;
-                    case 90:
-                        int[] temp1 = {m_MatrixPosX+2, m_MatrixPosY, m_MatrixPosX+2, m_MatrixPosY-1};
-                        tempPos = temp1;
-                        break;
-                    case 180:
-                        int[] temp2 = {m_MatrixPosX+1, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
-                        tempPos = temp2;
-                        break;
-                    case 270:
-                        int[] temp3 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+2, m_MatrixPosY-1};
-                        tempPos = temp3;
-                        break;
-                }
-                return tempPos;
-            }
-            else if(m_CurrentPiece == "T")
-            {
-                switch(m_Piece.GetRotateValue())
-                {
-                    case 0:
-                        int[] temp = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1};
-                        tempPos = temp;
-                        break;
-                    case 90:
-                        int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
-                        tempPos = temp1;
-                        break;
-                    case 180:
-                        int[] temp2 = {m_MatrixPosX+2, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1};
-                        tempPos = temp2;
-                        break;
-                    case 270:
-                        int[] temp3 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX+1, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2};
-                        tempPos = temp3;
-                        break;
-                }
-                return tempPos;
-            }
-            else if(m_CurrentPiece == "Tower")
-            {
-                switch(m_Piece.GetRotateValue())
-                {
-                    case 90:
-                    case 270:
-                        int[] temp = {m_MatrixPosX+3, m_MatrixPosY};
-                        tempPos = temp;
-                        break;
-                    default:
-                        int[] temp1 = {m_MatrixPosX, m_MatrixPosY, m_MatrixPosX, m_MatrixPosY-1, m_MatrixPosX, m_MatrixPosY-2, m_MatrixPosX, m_MatrixPosY-3};
-                        tempPos = temp1;
-                        break;
-                }
-                return tempPos;
-            }
-            else if(m_CurrentPiece == "Block")
-            {
-                int[] temp = {m_MatrixPosX, m_MatrixPosY};
-                return temp;
-            }
-        }
-        return null;
-    }
-    
-    private boolean CanMove(String _direction, int[] _positions)
-    {
-        int x = 0;
-        int y = 1;
-        int amountPieceToCheck = (_positions.length / 2);
-        
-        if(_direction == "Left" && !IsStageLimit("Left"))
-        {
-            for(int i = 0; i < amountPieceToCheck; i++)
-            {
-                if(m_Grid[_positions[x] - 1][_positions[y]] > 0)
-                    return false;
-                else
-                {
-                    x += 2;
-                    y += 2;
-                }
-            }
-            return true;
-        }
-        else if(_direction == "Right" && !IsStageLimit("Right"))
-        {
-            for(int i = 0; i < amountPieceToCheck; i++)
-            {
-                if(m_Grid[_positions[x] + 1][_positions[y]] > 0)
-                    return false;
-                else
-                {
-                    x += 2;
-                    y += 2;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-   
     public void NormalDropPiece()
     {
         m_FastDropPiece = false;
@@ -454,7 +153,7 @@ public class Ingame
     
     public void Execute()
     {
-        //m_CurrentPiece = "Pr"; //TEST
+        //m_CurrentPiece = "Quad"; //TEST
         
         m_Piece.DrawPieceInBoard(m_Grid);
         
@@ -463,7 +162,7 @@ public class Ingame
             DropPiece(); 
             Move();
         }
-    }
+    }   
     
     private void Move()
     {
@@ -561,6 +260,62 @@ public class Ingame
                         else
                             m_MoveRight = false;
                     }
+                } 
+                else
+                    m_MoveRight = false;
+            break;
+            
+            case "Block":
+                if(!IsStageLimit("Left"))
+                {
+                    if(m_MatrixPosX > 0)
+                    {
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0)
+                            m_MoveLeft = false;
+                    }
+                    else
+                        m_MoveLeft = false;
+                }
+                else
+                    m_MoveLeft = false;
+                
+                if(!IsStageLimit("Right"))
+                {
+                    if(m_MatrixPosX < 9)
+                    {
+                        if(m_Grid[m_MatrixPosX+1][m_MatrixPosY] > 0)
+                            m_MoveRight = false;
+                    }
+                    else
+                        m_MoveRight = false;
+                } 
+                else
+                    m_MoveRight = false;
+            break;
+            
+            case "Quad":
+                if(!IsStageLimit("Left"))
+                {
+                    if(m_MatrixPosX > 0)
+                    {
+                        if(m_Grid[m_MatrixPosX-1][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX-1][m_MatrixPosY-1] > 0)
+                            m_MoveLeft = false;
+                    }
+                    else
+                        m_MoveLeft = false;
+                }
+                else
+                    m_MoveLeft = false;
+                
+                if(!IsStageLimit("Right"))
+                {
+                    if(m_MatrixPosX < 9)
+                    {
+                        if(m_Grid[m_MatrixPosX+1][m_MatrixPosY] > 0 || m_Grid[m_MatrixPosX+1][m_MatrixPosY-1] > 0)
+                            m_MoveRight = false;
+                    }
+                    else
+                        m_MoveRight = false;
                 } 
                 else
                     m_MoveRight = false;
@@ -1431,8 +1186,11 @@ public class Ingame
     
     private void UpdateSpeed()
     {
-        if(m_Points > 5000)
-            m_DropSpeed = 0.5f;
+        if(m_Level > 5 && m_DropSpeed > 1f)
+        {
+            m_DropSpeed -= 0.5f;
+            m_Level = 1;
+        }
     }
     
     private void UpdatePiece()
@@ -1442,7 +1200,7 @@ public class Ingame
         
         if(!m_FastDropPiece)
         {
-            if(m_UpdateTimer >= 15f)
+            if(m_UpdateTimer >= m_PieceSpeed)
             {
                 CheckBoard();
                 
@@ -1987,6 +1745,8 @@ public class Ingame
             {
                 m_Points += 100;
                 m_DropSpeed -= 0.13f;
+                m_Level++;
+                UpdateSpeed();
                 
                 for(int i = 0; i < m_Grid.length; i++)
                 {
@@ -2018,14 +1778,40 @@ public class Ingame
     
     public boolean IsGameOver()
     {
+        m_HighScore = m_Points;
+        if(m_Grid[m_MatrixPosX][m_MatrixPosY-1] > 0)
+        {
+            for(int i = 0; i < m_Grid[0].length; i++)
+            {
+                m_Grid[0][i] = 1;
+                m_Grid[1][i] = 2;
+                m_Grid[2][i] = 3;
+                m_Grid[3][i] = 4;
+                m_Grid[4][i] = 5;
+                m_Grid[5][i] = 6;
+                m_Grid[6][i] = 7;
+                m_Grid[7][i] = 8;
+                m_Grid[8][i] = 1;
+                m_Grid[9][i] = 3;
+            }
+            return true;
+        }
+        
         if(m_Grid[m_MatrixPosX][m_MatrixPosY] > 0)
         {
-            //m_Piece.DropPiece(m_PosX, m_PosY, m_CurrentPiece);
-            m_Grid[m_MatrixPosX][0] = 1;
-            m_Grid[m_MatrixPosX][1] = 1;
-            m_Grid[m_MatrixPosX][2] = 1;
-            m_Grid[m_MatrixPosX][3] = 1;
-            m_Grid[m_MatrixPosX][4] = 1;
+            for(int i = 0; i < m_Grid[0].length; i++)
+            {
+                m_Grid[0][i] = 1;
+                m_Grid[1][i] = 2;
+                m_Grid[2][i] = 3;
+                m_Grid[3][i] = 4;
+                m_Grid[4][i] = 5;
+                m_Grid[5][i] = 6;
+                m_Grid[6][i] = 7;
+                m_Grid[7][i] = 8;
+                m_Grid[8][i] = 1;
+                m_Grid[9][i] = 3;
+            }
             return true;
         }
         

@@ -7,6 +7,7 @@ import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.gl2.GLUT;
 import java.awt.Color;
 import java.util.Random;
+import textura.Textura;
 
 /**
  * @author Washington O. da Silva
@@ -21,6 +22,14 @@ public class Piece
     private int [] m_PieceLimit;
     private int m_PieceRotate;
     
+    private Textura m_Texture;
+    private int m_TextureAmount;
+    public static final String m_Face = "tex/0.png";
+    private float m_Limit;
+    private int m_Filter;
+    private int m_Wrap;
+    private int m_Mode;
+    
     public Piece(GL2 _openGL2, String _pieceType)
     {
         m_GL2 = _openGL2;
@@ -29,6 +38,27 @@ public class Piece
         m_PosY = 45;
         m_PieceLimit = new int[2];
         m_PieceRotate = 0;
+        
+        m_Texture = null;
+        m_TextureAmount = 1;
+        m_Filter = GL2.GL_LINEAR; 
+        m_Wrap = GL2.GL_REPEAT;  
+        m_Mode = GL2.GL_DECAL;
+        m_Limit = 1;
+        m_Texture = new Textura(m_TextureAmount);
+    }
+    
+    public void SetTexture()
+    {
+        m_Texture.setAutomatica(true);
+        m_Texture.setFiltro(m_Filter);
+        m_Texture.setModo(m_Mode);
+        m_Texture.setWrap(m_Wrap);  
+        m_Texture.gerarTextura(m_GL2, m_Face, 0);
+        m_GL2.glTexCoord2f(0.0f, -1.0f); 
+        m_GL2.glTexCoord2f(1.0f, -1.0f); 
+        m_GL2.glTexCoord2f(1.0f, 0.0f); 
+        m_GL2.glTexCoord2f(0.0f, 0.0f); 
     }
     
     public void Rotate()
@@ -64,8 +94,10 @@ public class Piece
         DefinePiece(_pieceType, _posX, _posY, _onlyDraw);
     }
     
+    
     private void DefinePiece(String _pieceType, int _posX, int _posY)
     {
+        SetTexture();
         switch(_pieceType)
         {
             case "Block":
@@ -93,10 +125,12 @@ public class Piece
                 DrawPR(_posX, _posY, false);
                 break;
         }
+        m_Texture.desabilitarTextura(m_GL2, 0);
     }
     
     private void DefinePiece(String _pieceType, int _posX, int _posY, boolean _onlyDraw)
     {
+        SetTexture();
         switch(_pieceType)
         {
             case "Block":
@@ -124,6 +158,7 @@ public class Piece
                 DrawPR(_posX, _posY, _onlyDraw);
                 break;
         }
+        m_Texture.desabilitarTextura(m_GL2, 0);
     }
     
     private void DrawBlock(int _posX, int _posY)
